@@ -2,13 +2,18 @@
 import { computed, ref } from 'vue';
 import { ElNotification } from 'element-plus';
 import Aside from './components/aside.vue';
+import Comment from './components/postCard.vue'
+
+const curPage = ref('login')
 
 const username = ref('')
 const password = ref('')
+
 const notEmpty = computed(() => username.value.length === 0 || password.value.length === 0)
 
 const login = () => {
     ElNotification({ message: '欢迎回来！', type: 'success' })
+    curPage.value = 'home'
 }
 
 const reg = () => {
@@ -19,7 +24,7 @@ const reg = () => {
 <template>
 <div class="container">
     <Aside />
-    <div class="login-container">
+    <div v-if="curPage === 'login'" class="login-container">
         <div class="login">
             <h2 class="title">表白墙</h2>
             <div class="input">
@@ -39,6 +44,9 @@ const reg = () => {
             </div>
         </div>
     </div>
+    <div v-if="curPage === 'home'" class="comments">
+        <Comment />
+    </div>
 </div>
 </template>
 
@@ -57,7 +65,7 @@ body {
 
 .login-container {
     display: flex;
-    width: 100%;
+    width: calc(100% - 300px);
     justify-content: center;
 }
 
@@ -87,5 +95,9 @@ input {
 
 input:focus {
     border: 3px solid #86b7fe
+}
+
+.comments {
+    margin: 40px auto;
 }
 </style>
