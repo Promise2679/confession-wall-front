@@ -1,3 +1,9 @@
+<script setup lang="ts">
+const toHome = () => {
+
+}
+</script>
+
 <template>
 <div class="aside">
     <div class="head">
@@ -5,7 +11,7 @@
         <span class="name">未登录</span>
     </div>
     <hr class="translate">
-    <div class="translate btn"><span class="text">首页</span></div>
+    <div @click="toHome" class="translate btn"><span class="text">首页</span></div>
     <div class="translate btn"><span class="text">个人中心</span></div>
     <div class="logout"><span class="text">注销</span></div>
 </div>
