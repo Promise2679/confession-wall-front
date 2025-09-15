@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import main from '@/views/main.vue'
+import aside from '@/views/components/aside.vue'
 
 const routes = [
   {
@@ -7,6 +8,11 @@ const routes = [
     name: 'home',
     component: main,
   },
+  {
+    path: '/aside',
+    name: 'aside',
+    component: aside,
+  }
 ]
 
 const router = createRouter({
