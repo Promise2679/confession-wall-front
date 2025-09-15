@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import { ElNotification } from 'element-plus';
 import Aside from './components/aside.vue';
+import Comment from './components/postCard.vue'
 
 const curPage = ref('login')
 
@@ -44,21 +45,7 @@ const reg = () => {
         </div>
     </div>
     <div v-if="curPage === 'home'" class="comments">
-        <div class="comment">
-            <div class="avatar-container">
-                <img src="@/asset/default_avatar.webp" class="avatar">
-                <span>11111111</span>
-            </div>
-            <div>114514</div>
-            <div class="methods">
-                <div class="method">
-                    <font-awesome-icon icon="fa-solid fa-xmark" />删除
-                </div>
-                <div class="method">
-                    <font-awesome-icon icon="fa-solid fa-pen" />修改
-                </div>
-            </div>
-        </div>
+        <Comment />
     </div>
 </div>
 </template>
@@ -111,43 +98,6 @@ input:focus {
 }
 
 .comments {
-    margin: 60px auto;
-}
-
-.comment {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    width: 1200px;
-    padding-top: 20px;
-    padding-bottom: 65px;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.avatar-container {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    min-width: 150px;
-    width: 150px;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
-}
-
-.avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-
-}
-
-.methods {
-    position: absolute;
-    display: flex;
-    flex-direction: row;
-    gap: 7px;
-    right: 10px;
-    bottom: 5px;
+    margin: 40px auto;
 }
 </style>
