@@ -1,19 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import main from '@/views/main.vue'
-import aside from '@/views/components/aside.vue'
+import Login from '@/views/pages/login.vue'
+import Comments from '@/views/pages/comments.vue'
 import userStore from '@/stores/user'
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: main,
+    component: Comments,
   },
   {
-    path: '/aside',
-    name: 'aside',
-    component: aside,
-  }
+    path: '/login',
+    name: 'login',
+    component: Login,
+  },
 ]
 
 const router = createRouter({
@@ -23,13 +23,12 @@ const router = createRouter({
 
 router.beforeEach(to => {
   const store = userStore()
+  if (!store.isLogin && to.name !== 'login') {
+    return { name: 'login' }
+  }
   if (store.isLogin && to.name == 'login') {
     return { name: 'home' }
   }
-  if (store.isLogin) {
-    return true
-  }
-  return { name: 'login' }
 })
 
 export default router

@@ -8,7 +8,7 @@ interface Props {
     avatar?: string
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 
 const showComment = ref(false)
 

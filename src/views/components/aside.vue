@@ -1,7 +1,4 @@
 <script setup lang="ts">
-const toHome = () => {
-
-}
 </script>
 
 <template>
@@ -11,7 +8,7 @@ const toHome = () => {
         <span class="name">未登录</span>
     </div>
     <hr class="translate">
-    <div @click="toHome" class="translate btn"><span class="text">首页</span></div>
+    <RouterLink to="/" class="translate btn">首页</RouterLink>
     <div class="translate btn"><span class="text">个人中心</span></div>
     <div class="logout"><span class="text">注销</span></div>
 </div>
@@ -55,6 +52,8 @@ const toHome = () => {
     margin-top: 10px;
     align-items: center;
     justify-content: center;
+    text-decoration: none;
+    color: black;
 }
 
 .logout {
@@ -66,6 +65,10 @@ const toHome = () => {
     align-items: center;
     justify-content: center;
     color: red;
+}
+
+.selected {
+    background-color: rgb(226.5, 227.8, 229.1);
 }
 
 .btn:hover,
