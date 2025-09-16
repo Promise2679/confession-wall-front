@@ -2,10 +2,10 @@
 import { ref } from 'vue'
 
 interface Props {
-    username?: string
+    postid?: number
+    authorid?: number
     content?: string
     comments?: number
-    avatar?: string
 }
 
 defineProps<Props>()
