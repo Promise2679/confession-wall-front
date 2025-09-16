@@ -1,15 +1,27 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import userStore from '@/stores/user';
+import { useRouter } from 'vue-router';
+
+const store = userStore()
+const router = useRouter()
+
+const logout = () => {
+    store.username = ''
+    store.isLogin = false
+    router.push({ name: 'login' })
+}
+</script>
 
 <template><el-affix>
     <div class="aside">
         <div class="head">
             <img class="avatar" src="@/asset/default_avatar.webp">
-            <span class="name">未登录</span>
+            <span class="name">{{ store.username.length ? store.username : '未登录' }}</span>
         </div>
         <hr class="translate">
         <RouterLink to="/" class="translate btn">首页</RouterLink>
         <RouterLink to="/profile" class="translate btn">个人中心</RouterLink>
-        <div class="logout">注销</div>
+        <div @click="logout" class="logout">注销</div>
     </div>
 </el-affix></template>
 
@@ -74,5 +86,6 @@
 .logout:hover {
     background-color: rgb(226.5, 227.8, 229.1);
     transition: background-color 0.2s;
+    cursor: pointer;
 }
 </style>

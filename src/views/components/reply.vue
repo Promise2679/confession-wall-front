@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+import { ElNotification } from 'element-plus';
 
 interface Props {
     author: string
-    authorid?: number
+    authorid: number
     content?: string
 }
 
@@ -16,6 +17,10 @@ const emit = defineEmits<Emits>()
 
 const response = ref(false)
 
+const addBlacklist = (id: number) => {
+    ElNotification({ message: '已添加到黑名单', type: 'success', duration: 1500 })
+}
+
 watch(response, (value: boolean) => value && emit('response', prop.author))
 </script>
 
@@ -26,7 +31,10 @@ watch(response, (value: boolean) => value && emit('response', prop.author))
         <span>{{ author }}</span>
     </div>
     <div class="content">{{ content }}</div>
-    <font-awesome-icon @click="response = !response" class="response" icon="fa-solid fa-comment-dots" />
+    <div class="methods">
+        <div class="method" @click="addBlacklist(prop.authorid)">拉黑</div>
+        <font-awesome-icon class="method" @click="response = !response" icon="fa-solid fa-comment-dots" />
+    </div>
 </div>
 </template>
 
@@ -63,13 +71,17 @@ watch(response, (value: boolean) => value && emit('response', prop.author))
     word-break: break-all;
 }
 
-.response {
+.methods {
     position: absolute;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
     right: 20px;
     bottom: 5px;
 }
 
-.response:hover {
+.method {
     cursor: pointer;
 }
 </style>
