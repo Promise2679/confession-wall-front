@@ -32,11 +32,11 @@ const avatarSuccess: UploadProps['onSuccess'] = (response, uploadFile) => {
 }
 
 const submitUsername = () => {
-    ElNotification({ message: '修改成功！', type: 'success' })
+    ElNotification({ message: '修改成功！', type: 'success', duration: 1500 })
 }
 
 const submitPassword = () => {
-    ElNotification({ message: '修改成功！', type: 'success' })
+    ElNotification({ message: '修改成功！', type: 'success', duration: 1500 })
 }
 </script>
 

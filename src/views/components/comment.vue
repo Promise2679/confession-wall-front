@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { ElNotification } from 'element-plus'
+import Reply from './reply.vue'
 
 interface Props {
     postid?: number
+    author?: string
     authorid?: number
     content?: string
     comments?: number
@@ -11,6 +14,22 @@ interface Props {
 defineProps<Props>()
 
 const showComment = ref(false)
+const inputContent = ref('')
+const isSend = ref(false)
+const response = ref('author')
+
+const sendReply = () => {
+    isSend.value = true
+    setTimeout(() => {
+        isSend.value = false
+        inputContent.value = ''
+        ElNotification({ message: '发布成功！', type: 'success', duration: 1500 })
+    }, 1000)
+}
+
+const changeResponse = (name: string) => {
+    response.value = name
+}
 </script>
 
 <template>
@@ -18,9 +37,9 @@ const showComment = ref(false)
     <div class="comment">
         <div class="avatar-container">
             <img src="@/asset/default_avatar.webp" class="avatar">
-            <span>111111111</span>
+            <span>{{ author }}</span>
         </div>
-        <div class="content">114514</div>
+        <div class="content">{{ content }}</div>
         <div class="methods">
             <div class="method">
                 <font-awesome-icon icon="fa-solid fa-xmark" />删除
@@ -29,18 +48,19 @@ const showComment = ref(false)
                 <font-awesome-icon icon="fa-solid fa-pen" />修改
             </div>
             <div @click="showComment = !showComment" class="method">
-                <font-awesome-icon icon="fa-solid fa-comment-dots" />6
+                <font-awesome-icon icon="fa-solid fa-comment-dots" />{{ comments }}
             </div>
         </div>
     </div>
     <Transition>
         <div v-if="showComment" class="replies">
-            <div class="reply">
-                <div class="avatar-container-reply">
-                    <img src="@/asset/default_avatar.webp" class="avatar-reply">
-                    <span>11111</span>
-                </div>
-                <div class="content-reply">114514</div>
+            <Reply author="11111" content="114514" @response="changeResponse" />
+            <Reply author="11111111" content="11141423" @response="changeResponse" />
+            <div class="input" v-loading="isSend">
+                <el-input v-model="inputContent" style="width: 100%" rows="5" type="textarea"
+                    :placeholder="`回复 ${response}：`"></el-input>
+                <el-button @click="sendReply" style="width: 100%" type="primary"
+                    :disabled="inputContent.length === 0">发布</el-button>
             </div>
         </div>
     </Transition>
@@ -105,37 +125,6 @@ const showComment = ref(false)
 
 .replies {
     border: 1px solid #e9ecef;
-
-}
-
-.reply {
-    display: flex;
-    flex-direction: row;
-    width: 900px;
-    height: 100px;
-    padding-bottom: 40px;
-    padding-right: 20px;
-}
-
-.avatar-container-reply {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100px;
-    min-width: 100px;
-    height: 100%;
-}
-
-.avatar-reply {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-}
-
-.content-reply {
-    margin-top: 10px;
-    word-break: break-all;
 
 }
 

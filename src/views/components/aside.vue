@@ -1,17 +1,17 @@
 <script setup lang="ts"></script>
 
-<template>
-<div class="aside">
-    <div class="head">
-        <img class="avatar" src="@/asset/default_avatar.webp">
-        <span class="name">未登录</span>
+<template><el-affix>
+    <div class="aside">
+        <div class="head">
+            <img class="avatar" src="@/asset/default_avatar.webp">
+            <span class="name">未登录</span>
+        </div>
+        <hr class="translate">
+        <RouterLink to="/" class="translate btn">首页</RouterLink>
+        <RouterLink to="/profile" class="translate btn">个人中心</RouterLink>
+        <div class="logout">注销</div>
     </div>
-    <hr class="translate">
-    <RouterLink to="/" class="translate btn">首页</RouterLink>
-    <RouterLink to="/profile" class="translate btn">个人中心</RouterLink>
-    <div class="logout">注销</div>
-</div>
-</template>
+</el-affix></template>
 
 <style scoped>
 .aside {
@@ -75,5 +75,4 @@
     background-color: rgb(226.5, 227.8, 229.1);
     transition: background-color 0.2s;
 }
-
 </style>
