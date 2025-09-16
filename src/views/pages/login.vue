@@ -13,6 +13,7 @@ const password = ref('')
 const isEmpty = computed(() => username.value.length === 0 || password.value.length === 0)
 
 const login = () => {
+    store.username = username.value
     store.isLogin = true
     ElNotification({ message: '欢迎回来！', type: 'success', duration: 1500 })
     router.push({ name: 'home' })

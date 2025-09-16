@@ -7,14 +7,12 @@ import userStore from '@/stores/user'
 interface Props {
     postid: number
     author?: string
-    authorid?: number
+    authorid: number
     content?: string
     comments?: number
 }
 
 const prop = defineProps<Props>()
-
-const store = userStore()
 
 const showComment = ref(false)
 const inputContent = ref('')
@@ -28,6 +26,10 @@ const sendReply = () => {
         inputContent.value = ''
         ElNotification({ message: '发布成功！', type: 'success', duration: 1500 })
     }, 1000)
+}
+
+const addBlacklist = (id: number) => {
+    ElNotification({ message: '已添加到黑名单', type: 'success', duration: 1500 })
 }
 
 const deletePost = (index: number) => {
@@ -70,12 +72,14 @@ const changeResponse = (name: string) => {
         </div>
         <div class="content">{{ content }}</div>
         <div class="methods">
+            <div class="method" @click="addBlacklist(prop.authorid)">拉黑</div>
             <div class="method" @click="deletePost(prop.postid)">
                 <font-awesome-icon icon="fa-solid fa-xmark" />删除
             </div>
             <div class="method" @click="editPost(prop.postid)">
                 <font-awesome-icon icon="fa-solid fa-pen" />修改
             </div>
+            
             <div @click="showComment = !showComment" class="method">
                 <font-awesome-icon icon="fa-solid fa-comment-dots" />{{ comments }}
             </div>
@@ -83,8 +87,8 @@ const changeResponse = (name: string) => {
     </div>
     <Transition>
         <div v-if="showComment" class="replies">
-            <Reply author="11111" content="114514" @response="changeResponse" />
-            <Reply author="11111111" content="11141423" @response="changeResponse" />
+            <Reply author="11111" :authorid="1" content="114514" @response="changeResponse" />
+            <Reply author="11111111" :authorid="1" content="11141423" @response="changeResponse" />
             <div class="input" v-loading="isSend">
                 <el-input v-model="inputContent" style="width: 100%" rows="5" type="textarea"
                     :placeholder="`回复 ${response}：`"></el-input>
@@ -133,6 +137,11 @@ const changeResponse = (name: string) => {
     height: 60px;
     border-radius: 50%;
 
+}
+
+.blackify {
+    margin-top: 10px;
+    color: gray
 }
 
 .content {
