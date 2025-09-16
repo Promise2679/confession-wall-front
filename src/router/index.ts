@@ -29,10 +29,10 @@ const routes = [
     component: Blacklist,
   },
   {
-    path: 'mypost',
+    path: '/mypost',
     name: 'mypost',
     component: Mypost,
-  }
+  },
 ]
 
 const router = createRouter({
