@@ -2,7 +2,9 @@
 import { computed, ref } from 'vue';
 import { ElNotification } from 'element-plus';
 import { useRouter } from 'vue-router';
+import userStore from '@/stores/user';
 
+const store = userStore()
 const router = useRouter()
 
 const username = ref('')
@@ -11,6 +13,7 @@ const password = ref('')
 const isEmpty = computed(() => username.value.length === 0 || password.value.length === 0)
 
 const login = () => {
+    store.isLogin = true
     ElNotification({ message: '欢迎回来！', type: 'success', duration: 1500 })
     router.push({ name: 'home' })
 }

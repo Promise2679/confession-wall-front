@@ -5,7 +5,7 @@ import Comment from '@/views/components/comment.vue';
 <template>
     <RouterLink to="/profile"><el-button class="btn">返回</el-button></RouterLink>
     <div class="comments">
-        <Comment />
+        <Comment :postid="1" />
     </div>
 
 </template>
