@@ -19,7 +19,7 @@ const sendComment = () => {
 <template>
 <div class="container">
     <div class="comments">
-        <Comment author="114" content="114514" :comments="6" />
+        <Comment :postid="1" author="114" content="114514" :comments="6" />
     </div>
     <div class="input" v-loading="isSend">
         <el-input v-model="inputContent" style="width: 100%" rows="5" type="textarea"
