@@ -3,7 +3,7 @@ import Login from '@/views/pages/login.vue'
 import Comments from '@/views/pages/comments.vue'
 import Profile from '@/views/pages/profile.vue'
 import Blacklist from '@/views/pages/blacklist.vue'
-import Mypost from '@/views/pages/mypost.vue'
+import Myposts from '@/views/pages/myposts.vue'
 import userStore from '@/stores/user'
 
 
@@ -31,7 +31,7 @@ const routes = [
   {
     path: '/mypost',
     name: 'mypost',
-    component: Mypost,
+    component: Myposts,
   },
 ]
 
