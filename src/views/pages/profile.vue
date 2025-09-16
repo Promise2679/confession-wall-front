@@ -28,7 +28,7 @@ const formatChecker: UploadProps['beforeUpload'] = rawFile => {
 
 const avatarSuccess: UploadProps['onSuccess'] = (response, uploadFile) => {
     console.log(uploadFile)
-    imageUrl.value = '114'
+    imageUrl.value = URL.createObjectURL(uploadFile.raw!)
 }
 
 const submitUsername = () => {
@@ -52,9 +52,7 @@ const submitPassword = () => {
     </div>
 
     <p>头像：</p>
-    <el-upload action="localhost" :before-upload="formatChecker" :on-success="avatarSuccess" :show-file-list="false">
-        <img class="avatar" src="@/asset/default_avatar.webp" />
-    </el-upload>
+    <el-upload :before-upload="formatChecker" list-type="picture-card" :auto-upload="false"></el-upload>
 
     <p>我发布的帖子：</p>
     <RouterLink to="/mypost"><el-button class="btn-1">查看</el-button></RouterLink>

@@ -19,7 +19,7 @@ const store = userStore()
 const showComment = ref(false)
 const inputContent = ref('')
 const isSend = ref(false)
-const response = ref('author')
+const response = ref(prop.author)
 
 const sendReply = () => {
     isSend.value = true
