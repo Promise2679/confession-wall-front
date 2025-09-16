@@ -11,8 +11,6 @@ interface Props {
 defineProps<Props>()
 
 const showComment = ref(false)
-
-
 </script>
 
 <template>
@@ -22,9 +20,7 @@ const showComment = ref(false)
             <img src="@/asset/default_avatar.webp" class="avatar">
             <span>111111111</span>
         </div>
-        <div class="content">
-            114514svsdvsdv1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111vs
-        </div>
+        <div class="content">114514</div>
         <div class="methods">
             <div class="method">
                 <font-awesome-icon icon="fa-solid fa-xmark" />删除
@@ -38,17 +34,15 @@ const showComment = ref(false)
         </div>
     </div>
     <Transition>
-    <div v-if="showComment" class="replies">
-        <div class="reply">
-            <div class="avatar-container-reply">
-                <img src="@/asset/default_avatar.webp" class="avatar-reply">
-                <span>11111</span>
-            </div>
-            <div class="content-reply">
-                1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111vv11
+        <div v-if="showComment" class="replies">
+            <div class="reply">
+                <div class="avatar-container-reply">
+                    <img src="@/asset/default_avatar.webp" class="avatar-reply">
+                    <span>11111</span>
+                </div>
+                <div class="content-reply">114514</div>
             </div>
         </div>
-    </div>
     </Transition>
 </div>
 </template>
@@ -113,6 +107,7 @@ const showComment = ref(false)
     border: 1px solid #e9ecef;
 
 }
+
 .reply {
     display: flex;
     flex-direction: row;
@@ -146,11 +141,11 @@ const showComment = ref(false)
 
 .v-enter-active,
 .v-leave-active {
-  transition: opacity 0.5s ease;
+    transition: opacity 0.5s ease;
 }
 
 .v-enter-from,
 .v-leave-to {
-  opacity: 0;
+    opacity: 0;
 }
 </style>

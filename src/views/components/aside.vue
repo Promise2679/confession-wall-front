@@ -1,5 +1,4 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
 <div class="aside">
@@ -9,8 +8,8 @@
     </div>
     <hr class="translate">
     <RouterLink to="/" class="translate btn">首页</RouterLink>
-    <div class="translate btn"><span class="text">个人中心</span></div>
-    <div class="logout"><span class="text">注销</span></div>
+    <RouterLink to="/profile" class="translate btn">个人中心</RouterLink>
+    <div class="logout">注销</div>
 </div>
 </template>
 
@@ -77,7 +76,4 @@
     transition: background-color 0.2s;
 }
 
-.text {
-    text-align: center;
-}
 </style>
