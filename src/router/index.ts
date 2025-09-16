@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '@/views/pages/login.vue'
 import Comments from '@/views/pages/comments.vue'
 import userStore from '@/stores/user'
+import Profile from '@/views/pages/profile.vue'
 
 const routes = [
   {
@@ -14,11 +15,16 @@ const routes = [
     name: 'login',
     component: Login,
   },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: Profile,
+  }
 ]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+  routes,
 })
 
 router.beforeEach(to => {

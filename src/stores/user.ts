@@ -5,7 +5,6 @@ const userStore = defineStore('user', () => {
   const username = ref('')
   const isLogin = ref(true)
 
-
   return { username, isLogin }
 })
 
