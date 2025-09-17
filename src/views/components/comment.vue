@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ElNotification, ElMessageBox } from 'element-plus'
+import { ElNotification } from 'element-plus'
 import Reply from './reply.vue'
-import userStore from '@/stores/user'
 
 interface Props {
     postid: number
