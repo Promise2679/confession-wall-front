@@ -9,6 +9,8 @@ const isSend = ref(false)
 const isAnonymous = ref(false)
 const isInvisible = ref(false)
 
+const placeholderList = ['你一生，我一世，依久依旧不分离', '写下你的心动，让世界见证你的喜欢', '有些话，只想让TA知道，也让风知道', '山野万里，你是我藏在微风中的欢喜', '此处安心是吾乡，此处留言诉衷肠', '开始你的“甜蜜输出”～']
+
 const sendComment = () => {
     isSend.value = true
     setTimeout(() => {
@@ -26,7 +28,7 @@ const sendComment = () => {
     </div>
     <div class="input" v-loading="isSend">
         <el-input v-model="inputContent" style="width: 100%" rows="5" type="textarea"
-            placeholder="写下你的心动，让世界见证你的喜欢"></el-input>
+            :placeholder="placeholderList[Math.floor(Math.random() * placeholderList.length)]"></el-input>
         <div class="btn-container">
             <el-upload class="icon" :auto-upload="false" list-type="picture" :limit="9">
                 <el-icon>
