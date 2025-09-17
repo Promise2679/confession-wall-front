@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import Comment from '@/views/components/comment.vue';
 import { ElNotification } from 'element-plus';
 import { Picture } from '@element-plus/icons-vue';
+
+const placeholderList = ['你一生，我一世，依久依旧不分离', '写下你的心动，让世界见证你的喜欢', '有些话，只想让TA知道，也让风知道', '山野万里，你是我藏在微风中的欢喜', '此处安心是吾乡，此处留言诉衷肠', '开始你的“甜蜜输出”～']
 
 const inputContent = ref('')
 const isSend = ref(false)
 const isAnonymous = ref(false)
 const isInvisible = ref(false)
+const placeholderContent = ref(placeholderList[Math.floor(Math.random() * placeholderList.length)])
 
 const sendComment = () => {
     isSend.value = true
@@ -17,6 +20,10 @@ const sendComment = () => {
         ElNotification({ message: '发布成功！', type: 'success', duration: 1500 })
     }, 1000)
 }
+
+watch(isAnonymous, value => {
+    placeholderContent.value = value ? '勇敢一点，不留名也可以' : placeholderList[Math.floor(Math.random() * placeholderList.length)]
+})
 </script>
 
 <template>
@@ -26,7 +33,7 @@ const sendComment = () => {
     </div>
     <div class="input" v-loading="isSend">
         <el-input v-model="inputContent" style="width: 100%" rows="5" type="textarea"
-            placeholder="写下你的心动，让世界见证你的喜欢"></el-input>
+            :placeholder="placeholderContent"></el-input>
         <div class="btn-container">
             <el-upload class="icon" :auto-upload="false" list-type="picture" :limit="9">
                 <el-icon>
