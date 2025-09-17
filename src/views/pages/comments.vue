@@ -9,7 +9,7 @@ import axios from '@/request/request'
 
 interface Post {
     id: number
-    author: string
+    author?: string
     author_id: number
     content: string
     picture: string[]
@@ -51,11 +51,11 @@ const sendPost = () => {
             getPosts()
             ElNotification({ message: '发布成功！', type: 'success', duration: 1500 })
         } else {
-            ElNotification({ message: `发布失败：${res.data.msg}`, type: 'success', duration: 1500 })
+            ElNotification({ message: `发布失败：${res.data.msg}`, type: 'error', duration: 1500 })
         }
-    }).catch(err => {
-        ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 })
-    }).finally(() => {
+    })
+    .catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
+    .finally(() => {
         inputContent.value = ''
         isSend.value = false
     })
@@ -77,7 +77,7 @@ watch(isAnonymous, value => {
 <template>
 <div class="container">
     <div class="comments">
-        <Comment v-for="item in postList" :key="item.id" :postid="item.id" :author="item.author"
+        <Comment v-for="item in postList" :key="item.id" :postid="item.id" :author="item.author ? item.author : '匿名用户'"
             :authorid="item.author_id" :content="item.content" :comments="item.comments" :picture="item.picture" />
     </div>
     <div class="input" v-loading="isSend">

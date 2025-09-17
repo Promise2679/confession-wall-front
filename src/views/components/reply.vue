@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { ElNotification } from 'element-plus';
 
 interface Props {
+    replyid: number
     author: string
-    authorid: number
-    content?: string
+    reply_to?: string
+    content: string
 }
 
 interface Emits {
-    response: [name: string]
+    response: [name: string, id: number]
 }
 
 const prop = defineProps<Props>()
@@ -17,11 +17,8 @@ const emit = defineEmits<Emits>()
 
 const response = ref(false)
 
-const addBlacklist = (id: number) => {
-    ElNotification({ message: '已添加到黑名单', type: 'success', duration: 1500 })
-}
 
-watch(response, (value: boolean) => value && emit('response', prop.author))
+watch(response, (value: boolean) => value && emit('response', prop.author, prop.replyid))
 </script>
 
 <template>
@@ -30,9 +27,8 @@ watch(response, (value: boolean) => value && emit('response', prop.author))
         <img src="@/asset/default_avatar.webp" class="avatar">
         <span>{{ author }}</span>
     </div>
-    <div class="content">{{ content }}</div>
+    <div class="content">{{ (reply_to ? `回复：${reply_to}` : '') + content }}</div>
     <div class="methods">
-        <div class="method" @click="addBlacklist(prop.authorid)">拉黑</div>
         <font-awesome-icon class="method" @click="response = !response" icon="fa-solid fa-comment-dots" />
     </div>
 </div>
