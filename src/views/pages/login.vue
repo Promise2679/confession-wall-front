@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { ElNotification } from 'element-plus';
+import { ElNotification, ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
 import userStore from '@/stores/user';
+import axios from '@/request/request'
 
 const store = userStore()
 const router = useRouter()
@@ -13,14 +14,46 @@ const password = ref('')
 const isEmpty = computed(() => username.value.length === 0 || password.value.length === 0)
 
 const login = () => {
-    store.username = username.value
-    store.isLogin = true
-    ElNotification({ message: '欢迎回来！', type: 'success', duration: 1500 })
-    router.push({ name: 'home' })
+    const data = {
+        username: username.value,
+        password: password.value,
+    }
+    axios.post('/api/login', data).then(res => {
+        if (res.data.code === 200) {
+            store.username = username.value
+            store.isLogin = true
+            store.userid = res.data.data.user_id
+            store.token = res.data.data.token
+            ElNotification({ message: '欢迎回来！', type: 'success', duration: 1500 })
+            router.push({ name: 'home' })
+        } else {
+            ElNotification({ message: `登录失败：${res.data.msg}`, type: 'error' })
+        }
+    }).catch(err => {
+        ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 })
+    }).finally(() => {
+        username.value = ''
+        password.value = ''
+    })
 }
 
 const reg = () => {
-    ElNotification({ message: '注册成功！', type: 'success', duration: 1500 })
+    const data = {
+        username: username.value,
+        password: password.value,
+    }
+    axios.post('/api/reg', data).then(res => {
+        if (res.data.code === 200) {
+            ElNotification({ message: '注册成功，请重新输入账号', type: 'success', duration: 1500 })
+        } else {
+            ElNotification({ message: `注册失败：${res.data.msg}`, type: 'error' })
+        }
+    }).catch(err => {
+        ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 })
+    }).finally(() => {
+        username.value = ''
+        password.value = ''
+    })
 }
 </script>
 

@@ -5,10 +5,11 @@ import Reply from './reply.vue'
 
 interface Props {
     postid: number
-    author?: string
+    author: string
     authorid: number
-    content?: string
-    comments?: number
+    content: string
+    comments: number
+    picture: string[]
 }
 
 const prop = defineProps<Props>()
@@ -41,7 +42,7 @@ const changeResponse = (name: string) => {
     <div class="comment">
         <div class="avatar-container">
             <img src="@/asset/default_avatar.webp" class="avatar">
-            <span>{{ author }}</span>
+            <span>{{ authorid ? author : '匿名用户' }}</span>
         </div>
         <div class="content">{{ content }}</div>
         <div class="methods">

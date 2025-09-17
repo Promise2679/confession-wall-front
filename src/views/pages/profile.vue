@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { ElMessage, ElNotification, type UploadProps } from 'element-plus';
+import { ElNotification, type UploadProps } from 'element-plus';
+import { formatChecker } from '@/utils/picUploader';
 import userStore from '@/stores/user';
 import { RouterLink } from 'vue-router';
 import { Check } from '@element-plus/icons-vue';
@@ -14,17 +15,6 @@ const newPassword = ref('')
 
 const usernameChecker = computed(() => username.value === '' || username.value === store.username)
 const passwordChecker = computed(() => primaryPassword.value === '' || newPassword.value === '' || primaryPassword.value === newPassword.value)
-
-const formatChecker: UploadProps['beforeUpload'] = rawFile => {
-    if (rawFile.type !== 'image/jpeg' && rawFile.type !== 'image/png') {
-        ElMessage.error('头像必须为jpg或png格式!')
-        return false
-    } else if (rawFile.size / 1024 / 1024 > 2) {
-        ElMessage.error('头像不能超过2mb!')
-        return false
-    }
-    return true
-}
 
 const avatarSuccess: UploadProps['onSuccess'] = (response, uploadFile) => {
     console.log(uploadFile)
@@ -52,7 +42,8 @@ const submitPassword = () => {
     </div>
 
     <p>头像：</p>
-    <el-upload :before-upload="formatChecker" list-type="picture-card" :auto-upload="false"></el-upload>
+    <el-upload action="/api/avatar" :before-upload="formatChecker" list-type="picture-card"
+        :auto-upload="false"></el-upload>
 
     <p>我发布的帖子：</p>
     <RouterLink to="/mypost"><el-button class="btn-1">查看</el-button></RouterLink>
