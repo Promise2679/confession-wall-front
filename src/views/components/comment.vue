@@ -68,6 +68,8 @@ const changeResponse = (name: string) => {
 </template>
 
 <style scoped>
+@import "@/asset/comment.css";
+
 .comment-container {
     display: flex;
     flex-direction: column;
@@ -76,16 +78,8 @@ const changeResponse = (name: string) => {
 }
 
 .comment {
-    position: relative;
     display: flex;
     flex-direction: row;
-    width: 1200px;
-    padding-top: 20px;
-    padding-bottom: 65px;
-    padding-right: 20px;
-    border: 1px solid #e9ecef;
-    border-radius: 3px;
-    box-shadow: 1px 2px 1px 1px rgba(0, 0, 0, 0.1);
 }
 
 .avatar-container {
@@ -109,23 +103,6 @@ const changeResponse = (name: string) => {
 .blackify {
     margin-top: 10px;
     color: gray
-}
-
-.content {
-    word-break: break-all;
-}
-
-.methods {
-    position: absolute;
-    display: flex;
-    flex-direction: row;
-    gap: 15px;
-    right: 25px;
-    bottom: 5px;
-}
-
-.method:hover {
-    cursor: pointer;
 }
 
 .replies {
