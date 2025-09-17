@@ -1,43 +1,55 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { ElMessage, ElNotification, type UploadProps } from 'element-plus';
+import { ElNotification, ElMessage } from 'element-plus';
+import { formatChecker } from '@/utils/picUploader';
 import userStore from '@/stores/user';
 import { RouterLink } from 'vue-router';
 import { Check } from '@element-plus/icons-vue';
+import axios from '@/request/request'
+
 
 const store = userStore()
 
 const username = ref(store.username)
-const imageUrl = ref('')
 const primaryPassword = ref('')
 const newPassword = ref('')
 
 const usernameChecker = computed(() => username.value === '' || username.value === store.username)
 const passwordChecker = computed(() => primaryPassword.value === '' || newPassword.value === '' || primaryPassword.value === newPassword.value)
 
-const formatChecker: UploadProps['beforeUpload'] = rawFile => {
-    if (rawFile.type !== 'image/jpeg' && rawFile.type !== 'image/png') {
-        ElMessage.error('头像必须为jpg或png格式!')
-        return false
-    } else if (rawFile.size / 1024 / 1024 > 2) {
-        ElMessage.error('头像不能超过2mb!')
-        return false
-    }
-    return true
-}
-
-const avatarSuccess: UploadProps['onSuccess'] = (response, uploadFile) => {
-    console.log(uploadFile)
-    imageUrl.value = URL.createObjectURL(uploadFile.raw!)
-}
-
 const submitUsername = () => {
-    ElNotification({ message: '修改成功！', type: 'success', duration: 1500 })
+    const data = {
+        name: username.value
+    }
+    axios.put('/api/user/name', data).then(res => {
+        if (res.data.code === 200) {
+            store.username = username.value
+            ElNotification({ message: '修改成功！', type: 'success', duration: 1500 })
+        } else {
+            ElNotification({ message: `修改失败：${res.data.msg}`, type: 'error', duration: 1500 })
+        }
+    }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
 }
 
 const submitPassword = () => {
+    const data = {
+        old_password: primaryPassword.value,
+        new_password: newPassword.value,
+    }
+    axios.put('/api/user/password', data).then(res => {
+        if (res.data.code === 200) {
+            ElNotification({ message: '修改成功！', type: 'success', duration: 1500 })
+        } else {
+            ElNotification({ message: `修改失败：${res.data.msg}`, type: 'error', duration: 1500 })
+        }
+    }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
+        .finally(() => {
+            primaryPassword.value = ''
+            newPassword.value = ''
+        })
     ElNotification({ message: '修改成功！', type: 'success', duration: 1500 })
 }
+
 </script>
 
 <template>
@@ -52,7 +64,7 @@ const submitPassword = () => {
     </div>
 
     <p>头像：</p>
-    <el-upload :before-upload="formatChecker" list-type="picture-card" :auto-upload="false"></el-upload>
+    <el-upload action="/api/avatar" method="put" :before-upload="formatChecker" list-type="picture-card"></el-upload>
 
     <p>我发布的帖子：</p>
     <RouterLink to="/mypost"><el-button class="btn-1">查看</el-button></RouterLink>

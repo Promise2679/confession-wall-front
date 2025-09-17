@@ -1,40 +1,104 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { ElNotification, ElMessageBox } from 'element-plus'
+import { ref, watch, type Ref } from 'vue'
+import { ElNotification, ElMessage } from 'element-plus'
 import Reply from './reply.vue'
-import userStore from '@/stores/user'
+import axios from '@/request/request'
 
 interface Props {
     postid: number
-    author?: string
+    author: string
     authorid: number
-    content?: string
-    comments?: number
+    content: string
+    comments: number
+    picture: string[]
+}
+
+interface Emits {
+    change: []
+}
+
+interface Reply {
+    id: number
+    author: string
+    reply_to?: string
+    content: string
 }
 
 const prop = defineProps<Props>()
+const emit = defineEmits<Emits>()
 
+const replyList: Ref<Reply[]> = ref([])
 const showComment = ref(false)
 const inputContent = ref('')
 const isSend = ref(false)
 const response = ref(prop.author)
+const replyid = ref(0)
 
 const sendReply = () => {
     isSend.value = true
-    setTimeout(() => {
-        isSend.value = false
-        inputContent.value = ''
-        ElNotification({ message: '发布成功！', type: 'success', duration: 1500 })
-    }, 1000)
+    const data = {
+        post_id: prop.postid,
+        reply_id: replyid.value,
+        content: inputContent.value,
+    }
+    axios.post('/api/reply', data).then(res => {
+        if (res.data.code === 200) {
+            ElNotification({ message: '发布成功！', type: 'success', duration: 1500 })
+            getReply(prop.postid)
+        } else {
+            ElNotification({ message: `发布失败：${res.data.msg}`, type: 'error', duration: 1500 })
+        }
+    }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
+        .finally(() => {
+            isSend.value = false
+            inputContent.value = ''
+            response.value = prop.author
+            replyid.value = 0
+        })
+
 }
 
-const addBlacklist = (id: number) => {
-    ElNotification({ message: '已添加到黑名单', type: 'success', duration: 1500 })
+const getReply = (id: number) => {
+    const data = {
+        params: {
+            post_id: id,
+        }
+    }
+    axios.get('/api/reply', data).then(res => {
+        if (res.data.code === 200) {
+            replyList.value = res.data.data
+        } else {
+            ElNotification({ message: `获取评论失败：${res.data.msg}`, type: 'error', duration: 1500 })
+        }
+    }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
 }
 
-const changeResponse = (name: string) => {
+const addBlacklist = () => {
+    const data = {
+        block_id: prop.authorid
+    }
+    axios.post('/api/block', data).then(res => {
+        if (res.data.code === 200) {
+            ElNotification({ message: '已添加到黑名单', type: 'success', duration: 1500 })
+        } else {
+            ElNotification({ message: `添加失败：${res.data.msg}`, type: 'error', duration: 1500 })
+            emit('change')
+        }
+    }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
+}
+
+const changeResponse = (name: string, id: number) => {
     response.value = name
+    replyid.value = id
 }
+
+watch(showComment, value => {
+    if (value) {
+        getReply(prop.postid)
+        response.value = prop.author
+        replyid.value = 0
+    }
+})
 </script>
 
 <template>
@@ -46,7 +110,7 @@ const changeResponse = (name: string) => {
         </div>
         <div class="content">{{ content }}</div>
         <div class="methods">
-            <div class="method" @click="addBlacklist(prop.authorid)">拉黑</div>  
+            <div class="method" @click="addBlacklist">拉黑</div>
             <div @click="showComment = !showComment" class="method">
                 <font-awesome-icon icon="fa-solid fa-comment-dots" />{{ comments }}
             </div>
@@ -54,8 +118,8 @@ const changeResponse = (name: string) => {
     </div>
     <Transition>
         <div v-if="showComment" class="replies">
-            <Reply author="11111" :authorid="1" content="114514" @response="changeResponse" />
-            <Reply author="11111111" :authorid="1" content="11141423" @response="changeResponse" />
+            <Reply v-for="item in replyList" :key="item.id" :author="item.author" :content="item.content"
+                :replyid="item.id" @response="changeResponse" :reply_to="item.reply_to" />
             <div class="input" v-loading="isSend">
                 <el-input v-model="inputContent" style="width: 100%" rows="5" type="textarea"
                     :placeholder="`回复 ${response}：`"></el-input>
