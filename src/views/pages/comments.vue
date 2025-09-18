@@ -9,7 +9,7 @@ import axios from '@/request/request'
 
 interface Post {
     id: number
-    author?: string
+    author: string
     author_id: number
     content: string
     picture: string[]
@@ -53,12 +53,11 @@ const sendPost = () => {
         } else {
             ElNotification({ message: `发布失败：${res.data.msg}`, type: 'error', duration: 1500 })
         }
-    })
-    .catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
-    .finally(() => {
-        inputContent.value = ''
-        isSend.value = false
-    })
+    }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
+        .finally(() => {
+            inputContent.value = ''
+            isSend.value = false
+        })
 }
 
 const addUrl: UploadProps['onSuccess'] = res => {
@@ -77,15 +76,15 @@ watch(isAnonymous, value => {
 <template>
 <div class="container">
     <div class="comments">
-        <Comment v-for="item in postList" :key="item.id" :postid="item.id" :author="item.author ? item.author : '匿名用户'"
-            :authorid="item.author_id" :content="item.content" :comments="item.comments" :picture="item.picture" />
+        <Comment v-for="item in postList" :key="item.id" :postid="item.id" :author="item.author"
+            :authorid="item.author_id" :content="item.content" :comments="item.comments" :picture="item.picture" @change="getPosts" />
     </div>
     <div class="input" v-loading="isSend">
         <el-input v-model="inputContent" style="width: 100%" rows="5" type="textarea"
             :placeholder="placeholderContent"></el-input>
         <div class="btn-container">
-            <el-upload action="/api/picture" :before-upload="formatChecker" :on-success="addUrl"
-                class="icon" list-type="picture" :limit="9">
+            <el-upload action="/api/picture" :before-upload="formatChecker" :on-success="addUrl" class="icon"
+                list-type="picture" :limit="9">
                 <el-icon>
                     <Picture />
                 </el-icon>

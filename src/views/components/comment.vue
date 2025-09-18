@@ -13,6 +13,10 @@ interface Props {
     picture: string[]
 }
 
+interface Emits {
+    change: []
+}
+
 interface Reply {
     id: number
     author: string
@@ -21,6 +25,7 @@ interface Reply {
 }
 
 const prop = defineProps<Props>()
+const emit = defineEmits<Emits>()
 
 const replyList: Ref<Reply[]> = ref([])
 const showComment = ref(false)
@@ -68,8 +73,18 @@ const getReply = (id: number) => {
     }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
 }
 
-const addBlacklist = (id: number) => {
-    ElNotification({ message: '已添加到黑名单', type: 'success', duration: 1500 })
+const addBlacklist = () => {
+    const data = {
+        block_id: prop.authorid
+    }
+    axios.post('/api/block', data).then(res => {
+        if (res.data.code === 200) {
+            ElNotification({ message: '已添加到黑名单', type: 'success', duration: 1500 })
+        } else {
+            ElNotification({ message: `添加失败：${res.data.msg}`, type: 'error', duration: 1500 })
+            emit('change')
+        }
+    }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
 }
 
 const changeResponse = (name: string, id: number) => {
@@ -95,7 +110,7 @@ watch(showComment, value => {
         </div>
         <div class="content">{{ content }}</div>
         <div class="methods">
-            <div class="method" @click="addBlacklist(prop.authorid)">拉黑</div>
+            <div class="method" @click="addBlacklist">拉黑</div>
             <div @click="showComment = !showComment" class="method">
                 <font-awesome-icon icon="fa-solid fa-comment-dots" />{{ comments }}
             </div>
