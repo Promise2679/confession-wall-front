@@ -40,7 +40,7 @@ const router = createRouter({
   routes,
 })
 
-
+// 导航守卫
 router.beforeEach(to => {
   const store = userStore()
   if (!store.isLogin && to.name !== 'login') {
