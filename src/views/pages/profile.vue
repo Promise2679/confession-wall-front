@@ -47,7 +47,6 @@ const submitPassword = () => {
             primaryPassword.value = ''
             newPassword.value = ''
         })
-    ElNotification({ message: '修改成功！', type: 'success', duration: 1500 })
 }
 
 </script>

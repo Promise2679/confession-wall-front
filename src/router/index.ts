@@ -6,33 +6,12 @@ import Blacklist from '@/views/pages/blacklist.vue'
 import Myposts from '@/views/pages/myposts.vue'
 import userStore from '@/stores/user'
 
-
 const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: Comments,
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: Login,
-  },
-  {
-    path: '/profile',
-    name: 'profile',
-    component: Profile,
-  },
-  {
-    path: '/blacklist',
-    name: 'blacklist',
-    component: Blacklist,
-  },
-  {
-    path: '/mypost',
-    name: 'mypost',
-    component: Myposts,
-  },
+  { path: '/', name: 'home', component: Comments },
+  { path: '/login', name: 'login', component: Login },
+  { path: '/profile', name: 'profile', component: Profile },
+  { path: '/blacklist', name: 'blacklist', component: Blacklist },
+  { path: '/mypost', name: 'mypost', component: Myposts },
 ]
 
 const router = createRouter({
@@ -40,7 +19,7 @@ const router = createRouter({
   routes,
 })
 
-
+// 导航守卫
 router.beforeEach(to => {
   const store = userStore()
   if (!store.isLogin && to.name !== 'login') {

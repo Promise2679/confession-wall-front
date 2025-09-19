@@ -92,6 +92,7 @@ const changeResponse = (name: string, id: number) => {
     replyid.value = id
 }
 
+// 点击评论按钮时，获取评论列表，并初始化
 watch(showComment, value => {
     if (value) {
         getReply(prop.postid)

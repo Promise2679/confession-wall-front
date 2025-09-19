@@ -26,6 +26,7 @@ const isSend = ref(false)
 const isAnonymous = ref(false)
 const isInvisible = ref(false)
 
+// placeholder 随机内容
 const placeholderContent = ref(placeholderList[Math.floor(Math.random() * placeholderList.length)])
 
 const getPosts = () => {
@@ -68,6 +69,7 @@ onMounted(() => {
     getPosts()
 })
 
+// 点击匿名按钮时，更换 placeholder 内容
 watch(isAnonymous, value => {
     placeholderContent.value = value ? '勇敢一点，不留名也可以' : placeholderList[Math.floor(Math.random() * placeholderList.length)]
 })
@@ -77,7 +79,8 @@ watch(isAnonymous, value => {
 <div class="container">
     <div class="comments">
         <Comment v-for="item in postList" :key="item.id" :postid="item.id" :author="item.author"
-            :authorid="item.author_id" :content="item.content" :comments="item.comments" :picture="item.picture" @change="getPosts" />
+            :authorid="item.author_id" :content="item.content" :comments="item.comments" :picture="item.picture"
+            @change="getPosts" />
     </div>
     <div class="input" v-loading="isSend">
         <el-input v-model="inputContent" style="width: 100%" rows="5" type="textarea"

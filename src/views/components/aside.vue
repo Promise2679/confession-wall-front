@@ -1,15 +1,28 @@
 <script setup lang="ts">
 import userStore from '@/stores/user';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { debounce } from 'lodash';
 
 const store = userStore()
 const router = useRouter()
+
+const fontSize = ref(1)
+
+const updateFontsize = debounce(value => {
+    fontSize.value = value
+    document.documentElement.style.setProperty('--font-size', `${fontSize.value}em`)
+}, 100, { 'trailing': true })
 
 const logout = () => {
     store.username = ''
     store.isLogin = false
     router.push({ name: 'login' })
 }
+
+watch(fontSize, value => {
+    updateFontsize(value)
+})
 </script>
 
 <template><el-affix>
@@ -20,7 +33,11 @@ const logout = () => {
         </div>
         <RouterLink to="/" class="translate btn">首页</RouterLink>
         <RouterLink to="/profile" class="translate btn">个人中心</RouterLink>
-        <div style="flex: auto;"></div>
+        <div style="flex: 1;"></div>
+        <div class="option">
+            <div class="font">字号</div>
+            <el-slider v-model="fontSize" :step="0.1" :min="1" :max="1.5" />
+        </div>
         <div @click="logout" class="logout">注销</div>
     </div>
 </el-affix></template>
@@ -68,11 +85,24 @@ const logout = () => {
     color: black;
 }
 
+.option {
+    display: flex;
+    width: 100%;
+    height: 50px;
+    flex-flow: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.font {
+    white-space: nowrap;
+}
+
 .logout {
     display: flex;
     width: 100%;
     height: 50px;
-    margin-bottom: 10px;
     align-items: center;
     justify-content: center;
     color: red;

@@ -16,7 +16,7 @@ const app = createApp(App)
 
 app.use(ElementPlus)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-  app.component(key, component)
+	app.component(key, component)
 }
 
 library.add(faThumbsUp, faTriangleExclamation, faXmark, faPen, faCommentDots)
