@@ -17,7 +17,7 @@ const emit = defineEmits<Emits>()
 
 const response = ref(false)
 
-
+// 点击回复按钮时，更新回复对象
 watch(response, (value: boolean) => value && emit('response', prop.author, prop.replyid))
 </script>
 

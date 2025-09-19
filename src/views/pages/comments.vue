@@ -26,6 +26,7 @@ const isSend = ref(false)
 const isAnonymous = ref(false)
 const isInvisible = ref(false)
 
+// placeholder 随机内容
 const placeholderContent = ref(placeholderList[Math.floor(Math.random() * placeholderList.length)])
 
 const getPosts = () => {
@@ -68,6 +69,7 @@ onMounted(() => {
     getPosts()
 })
 
+// 点击匿名按钮时，更换 placeholder 内容
 watch(isAnonymous, value => {
     placeholderContent.value = value ? '勇敢一点，不留名也可以' : placeholderList[Math.floor(Math.random() * placeholderList.length)]
 })
