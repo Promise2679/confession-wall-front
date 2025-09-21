@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { ElNotification, ElMessage } from 'element-plus';
+import { computed, ref, type Ref } from 'vue';
+import { ElNotification, ElMessage, type UploadUserFile, type UploadProps, type UploadFile, uploadProps } from 'element-plus';
 import { formatChecker } from '@/utils/picUploader';
 import userStore from '@/stores/user';
 import { RouterLink } from 'vue-router';
@@ -12,6 +12,16 @@ const store = userStore()
 const username = ref(store.username)
 const primaryPassword = ref('')
 const newPassword = ref('')
+const dialogImageUrl = ref('')
+const dialogVisible = ref(false)
+
+// 头像列表
+const fileList: Ref<UploadUserFile[]> = ref([
+    {
+        name: 'avatar',
+        url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+    },
+])
 
 const usernameChecker = computed(() => username.value === '' || username.value === store.username)
 const passwordChecker = computed(() => primaryPassword.value === '' || newPassword.value === '' || primaryPassword.value === newPassword.value)
@@ -28,6 +38,14 @@ const submitUsername = () => {
             ElNotification({ message: `修改失败：${res.data.msg}`, type: 'error', duration: 1500 })
         }
     }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
+}
+
+// 上传头像成功后，移除前一个头像
+const submitAvatar: UploadProps['onSuccess'] = res => {
+    if (res.code === 200) {
+        fileList.value.shift()
+
+    }
 }
 
 const submitPassword = () => {
@@ -48,6 +66,10 @@ const submitPassword = () => {
         })
 }
 
+const picturePreview = (file: UploadFile) => {
+    dialogImageUrl.value = file.url!
+    dialogVisible.value = true
+}
 </script>
 
 <template>
@@ -56,13 +78,31 @@ const submitPassword = () => {
 
     <p>昵称：</p>
     <div class="name-container">
-        <el-input v-model="username"></el-input>
+        <el-input class="input" v-model="username"></el-input>
         <el-button @click="submitUsername" class="btn-3" type="success" :disabled="usernameChecker" :icon="Check"
             circle />
     </div>
 
     <p>头像：</p>
-    <el-upload action="/api/avatar" method="put" :before-upload="formatChecker" list-type="picture-card"></el-upload>
+    <el-upload action="/api/avatar" v-model:file-list="fileList" method="put" :before-upload="formatChecker"
+        :on-success="submitAvatar" list-type="picture-card">
+        <el-icon>
+            <Plus />
+        </el-icon>
+        <template #file="{ file }">
+            <div>
+                <img class="el-upload-list__item-thumbnail" :src="file.url" />
+                <span class="el-upload-list__item-actions">
+                    <span class="el-upload-list__item-preview" @click="picturePreview(file)">
+                        <el-icon><zoom-in /></el-icon>
+                    </span>
+                </span>
+            </div>
+        </template>
+    </el-upload>
+    <el-dialog v-model="dialogVisible">
+        <img :src="dialogImageUrl" />
+    </el-dialog>
 
     <p>我发布的帖子：</p>
     <RouterLink to="/mypost"><el-button class="btn-1">查看</el-button></RouterLink>
@@ -73,10 +113,10 @@ const submitPassword = () => {
     <h2>修改密码</h2>
 
     <p>请输入原密码：</p>
-    <el-input v-model="primaryPassword" show-password></el-input>
+    <el-input class="input" v-model="primaryPassword" show-password></el-input>
 
     <p>请输入修改后的密码：</p>
-    <el-input v-model="newPassword" show-password></el-input>
+    <el-input class="input" v-model="newPassword" show-password></el-input>
 
     <el-button @click="submitPassword" class="btn-2" type="primary" :disabled="passwordChecker">修改</el-button>
 </div>
@@ -87,8 +127,9 @@ const submitPassword = () => {
     display: flex;
     flex-direction: column;
     margin-left: 50px;
-    width: 400px;
+    width: calc(100% - 350px);
     gap: 10px;
+    background-color: var(--bg-color);
 }
 
 .name-container {
@@ -109,5 +150,9 @@ const submitPassword = () => {
 .btn-2 {
     margin-top: 40px;
     width: 80px;
+}
+
+.input {
+    width: 400px;
 }
 </style>
