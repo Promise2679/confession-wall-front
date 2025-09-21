@@ -44,6 +44,7 @@ watch(response, (value: boolean) => value && emit('response', prop.author, prop.
     padding-bottom: 40px;
     padding-right: 20px;
     border-bottom: 1px solid #e9ecef;
+    background-color: white;
 }
 
 .avatar-container {
@@ -79,5 +80,6 @@ watch(response, (value: boolean) => value && emit('response', prop.author, prop.
 
 .method {
     cursor: pointer;
+    color: var(--btn-color)
 }
 </style>

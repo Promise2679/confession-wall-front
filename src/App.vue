@@ -12,6 +12,10 @@ import Aside from '@/views/components/aside.vue';
 <style>
 :root {
   --font-size: 1em;
+  --color: 0;
+  --primary: oklch(0.7 0.85 var(var(--color)));
+  --bg-color: oklch(0.95 0.01 var(--color));
+  --btn-color: oklch(.85 .08 var(--color));
 }
 
 body {

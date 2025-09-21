@@ -137,6 +137,7 @@ watch(showComment, value => {
 
 .comment-container {
     display: flex;
+    background-color: var(--bg-color);
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -145,6 +146,7 @@ watch(showComment, value => {
 .comment {
     display: flex;
     flex-direction: row;
+    background-color: white;
 }
 
 .avatar-container {
@@ -172,7 +174,6 @@ watch(showComment, value => {
 
 .replies {
     border: 1px solid #e9ecef;
-
 }
 
 .v-enter-active,

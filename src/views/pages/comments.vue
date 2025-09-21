@@ -6,6 +6,8 @@ import { ElNotification, ElMessage, type UploadProps } from 'element-plus';
 import { formatChecker } from '@/utils/picUploader';
 import { Picture } from '@element-plus/icons-vue';
 import axios from '@/request/request'
+import oklchToHex from '@/utils/oklch2hex';
+import userStore from '@/stores/user';
 
 interface Post {
     id: number
@@ -15,6 +17,8 @@ interface Post {
     picture: string[]
     comments: number
 }
+
+const store = userStore()
 
 const placeholderList = ['你一生，我一世，依久依旧不分离', '写下你的心动，让世界见证你的喜欢', '有些话，只想让TA知道，也让风知道', '山野万里，你是我藏在微风中的欢喜', '此处安心是吾乡，此处留言诉衷肠', '开始你的“甜蜜输出”～']
 const postList: Ref<Post[]> = ref([])
@@ -97,14 +101,15 @@ watch(isAnonymous, value => {
             <el-checkbox v-model="isAnonymous" label="匿名" />
             <el-checkbox v-model="isInvisible" label="仅自己可见" />
         </div>
-        <el-button @click="sendPost" style="width: 100%" type="primary"
-            :disabled="inputContent.length === 0">发布</el-button>
+        <el-button @click="sendPost" style="width: 100%; color: white" :disabled="inputContent.length === 0"
+            :color="oklchToHex(0.85, 0.08, store.color)">发布</el-button>
     </div>
 </div>
 </template>
 
 <style scoped>
 .container {
+    background-color: var(--bg-color);
     display: flex;
     flex-direction: column;
     flex-grow: 40;

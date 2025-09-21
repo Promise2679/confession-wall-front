@@ -8,11 +8,18 @@ const store = userStore()
 const router = useRouter()
 
 const fontSize = ref(1)
+const color = ref(store.color)
 
 const updateFontsize = debounce(value => {
     fontSize.value = value
     document.documentElement.style.setProperty('--font-size', `${fontSize.value}em`)
 }, 100, { 'trailing': true })
+
+const updateColor = debounce(value => {
+    color.value = value
+    store.color = value
+    document.documentElement.style.setProperty('--color', `${color.value}`)
+})
 
 const logout = () => {
     store.username = ''
@@ -22,6 +29,10 @@ const logout = () => {
 
 watch(fontSize, value => {
     updateFontsize(value)
+})
+
+watch(color, value => {
+    updateColor(value)
 })
 </script>
 
@@ -35,8 +46,12 @@ watch(fontSize, value => {
         <RouterLink to="/profile" class="translate btn">个人中心</RouterLink>
         <div style="flex: 1;"></div>
         <div class="option">
+            <div class="font">主题色</div>
+            <input type="range" v-model="color" min="0" max="360" class="color" step="1" style="width: 100%">
+        </div>
+        <div class="option">
             <div class="font">字号</div>
-            <el-slider v-model="fontSize" :step="0.1" :min="1" :max="1.5" />
+            <input type="range" v-model="fontSize" step="0.1" min="1" max="1.5" style="width: 100%" />
         </div>
         <div @click="logout" class="logout">注销</div>
     </div>

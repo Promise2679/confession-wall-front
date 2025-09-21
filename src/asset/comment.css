@@ -23,6 +23,10 @@
     bottom: 5px;
 }
 
+/* .method {
+
+} */
+
 .method:hover {
     cursor: pointer;
 }

@@ -7,7 +7,6 @@ import { RouterLink } from 'vue-router';
 import { Check } from '@element-plus/icons-vue';
 import axios from '@/request/request'
 
-
 const store = userStore()
 
 const username = ref(store.username)
