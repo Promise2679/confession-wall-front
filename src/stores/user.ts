@@ -1,6 +1,8 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
+// 用户全局存储信息
+// 包括用户名，登录状态，token，字体大小和主题色
 const userStore = defineStore('user', () => {
   const userid = ref(null)
   const username = ref('')

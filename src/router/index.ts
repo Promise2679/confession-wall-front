@@ -6,6 +6,8 @@ import Blacklist from '@/views/pages/blacklist.vue'
 import Myposts from '@/views/pages/myposts.vue'
 import userStore from '@/stores/user'
 
+// 路由注册
+// 按顺序分别为首页，登录页，个人档案，黑名单，个人发布的帖子
 const routes = [
   { path: '/', name: 'home', component: Comments },
   { path: '/login', name: 'login', component: Login },
@@ -20,6 +22,7 @@ const router = createRouter({
 })
 
 // 导航守卫
+// 包括正向和反向
 router.beforeEach(to => {
   const store = userStore()
   if (!store.isLogin && to.name !== 'login') {

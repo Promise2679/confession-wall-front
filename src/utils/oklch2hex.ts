@@ -1,7 +1,11 @@
 // oklch 转 hex
 // 复制粘贴了 npm 中的 oklch 包
-// 为什么不直接用呢，因为导入不进来，哈哈
-// 同时升级为 TypeScript，添加了类型支持
+// 因为自定义主题色是借鉴的 Astro 的 Fuwari 主题，它用的是 oklch 格式
+// 但是 el-button 的 color API 只支持 Hex 格式
+// 于是我找到了这个东西
+// 为什么不直接导入呢，因为导入不进来，哈哈
+// 原文件为 .js，为了满足作业要求，改为 .ts，并添加了类型支持
+// 具体实现原理，看代码吧，我也看不懂
 
 const oklabToLinearRgb = (L: number, a: number, b: number) => {
   const l = L + 0.3963377774 * a + 0.2158037573 * b
