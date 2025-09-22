@@ -7,16 +7,15 @@ import { debounce } from 'lodash';
 const store = userStore()
 const router = useRouter()
 
-const fontSize = ref(1)
+const fontSize = ref(store.fontSize)
 const color = ref(store.color)
 
 const updateFontsize = debounce(value => {
-    fontSize.value = value
+    store.fontSize = value
     document.documentElement.style.setProperty('--font-size', `${fontSize.value}em`)
 }, 100, { 'trailing': true })
 
 const updateColor = debounce(value => {
-    color.value = value
     store.color = value
     document.documentElement.style.setProperty('--color', `${color.value}`)
 })

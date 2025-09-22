@@ -80,6 +80,5 @@ watch(response, (value: boolean) => value && emit('response', prop.author, prop.
 
 .method {
     cursor: pointer;
-    color: var(--btn-color)
 }
 </style>

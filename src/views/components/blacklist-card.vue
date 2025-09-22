@@ -24,6 +24,7 @@ defineProps<Props>()
     height: 200px;
     gap: 5px;
     box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
+    background-color: white;
 }
 
 .avatar {

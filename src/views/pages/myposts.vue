@@ -28,14 +28,17 @@ onMounted(() => {
 
 <template>
 <RouterLink to="/profile"><el-button class="btn">返回</el-button></RouterLink>
-<div class="comments">
-    <Comment v-for="item in mypostList" :key="item.post_id" :postid="item.post_id" :content="item.content" @change="getMyposts" />
+<div style="width: calc(100% - 300px); background-color: var(--bg-color);">
+    <div class="comments">
+        <Comment v-for="item in mypostList" :key="item.post_id" :postid="item.post_id" :content="item.content"
+            @change="getMyposts" />
+    </div>
 </div>
 </template>
 
 <style scoped>
 .comments {
-    margin: 40px auto;
+    margin: 40px 100px;
 }
 
 .btn {

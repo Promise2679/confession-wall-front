@@ -3,6 +3,8 @@ import { ref, watch, type Ref } from 'vue'
 import { ElNotification, ElMessage } from 'element-plus'
 import Reply from './reply.vue'
 import axios from '@/request/request'
+import oklchToHex from '@/utils/oklch2hex'
+import userStore from '@/stores/user'
 
 interface Props {
     postid: number
@@ -23,6 +25,8 @@ interface Reply {
     reply_to?: string
     content: string
 }
+
+const store = userStore()
 
 const prop = defineProps<Props>()
 const emit = defineEmits<Emits>()
@@ -109,7 +113,14 @@ watch(showComment, value => {
             <img src="@/asset/default_avatar.webp" class="avatar">
             <span>{{ author }}</span>
         </div>
-        <div class="content">{{ content }}</div>
+        <div class="content">
+            {{ content }}
+            <div class="pic-container">
+                <el-image src="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
+                    style="width: 100px; height: 100px;"
+                    :preview-src-list="['https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg']" />
+            </div>
+        </div>
         <div class="methods">
             <div class="method" @click="addBlacklist">拉黑</div>
             <div @click="showComment = !showComment" class="method">
@@ -124,8 +135,8 @@ watch(showComment, value => {
             <div class="input" v-loading="isSend">
                 <el-input v-model="inputContent" style="width: 100%" rows="5" type="textarea"
                     :placeholder="`回复 ${response}：`"></el-input>
-                <el-button @click="sendReply" style="width: 100%" type="primary"
-                    :disabled="inputContent.length === 0">发布</el-button>
+                <el-button @click="sendReply" style="width: 100%" :disabled="inputContent.length === 0"
+                    :color="oklchToHex(0.85, 0.08, store.color)">发布</el-button>
             </div>
         </div>
     </Transition>
@@ -146,7 +157,6 @@ watch(showComment, value => {
 .comment {
     display: flex;
     flex-direction: row;
-    background-color: white;
 }
 
 .avatar-container {

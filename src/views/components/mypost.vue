@@ -66,7 +66,15 @@ const editPost = () => {
 
 <template>
 <div class="comment">
-    <div class="content">{{ content }}</div>
+    <div class="content">
+        {{ content }}
+        <div class="pic-container">
+            <el-image src="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
+                style="width: 100px; height: 100px;"
+                :preview-src-list="['https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg']" />
+        </div>
+    </div>
+
     <div class="methods">
         <div class="method" @click="deletePost">
             <font-awesome-icon icon="fa-solid fa-xmark" />删除

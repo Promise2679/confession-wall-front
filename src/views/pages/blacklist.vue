@@ -22,14 +22,16 @@ onMounted(() => {
 </script>
 
 <template>
-<div class="container">
-    <div class="title-container">
-        <h2>黑名单</h2>
-        <RouterLink to="/profile"><el-button>返回</el-button></RouterLink>
-    </div>
-    <div class="list-container">
-        <Card />
-        <Card />
+<div style="width: 100%; background-color: var(--bg-color);">
+    <div class="container">
+        <div class="title-container">
+            <h2>黑名单</h2>
+            <RouterLink to="/profile"><el-button>返回</el-button></RouterLink>
+        </div>
+        <div class="list-container">
+            <Card />
+            <Card />
+        </div>
     </div>
 </div>
 </template>

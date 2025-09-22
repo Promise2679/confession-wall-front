@@ -6,6 +6,7 @@ import userStore from '@/stores/user';
 import { RouterLink } from 'vue-router';
 import { Check } from '@element-plus/icons-vue';
 import axios from '@/request/request'
+import oklchToHex from '@/utils/oklch2hex';
 
 const store = userStore()
 
@@ -44,7 +45,6 @@ const submitUsername = () => {
 const submitAvatar: UploadProps['onSuccess'] = res => {
     if (res.code === 200) {
         fileList.value.shift()
-
     }
 }
 
@@ -73,52 +73,54 @@ const picturePreview = (file: UploadFile) => {
 </script>
 
 <template>
-<div class="container">
-    <h2>个人信息</h2>
+<div style="background-color: var(--bg-color); width: calc(100% - 300px);">
+    <div class="container">
+        <h2>个人信息</h2>
 
-    <p>昵称：</p>
-    <div class="name-container">
-        <el-input class="input" v-model="username"></el-input>
-        <el-button @click="submitUsername" class="btn-3" type="success" :disabled="usernameChecker" :icon="Check"
-            circle />
-    </div>
+        <p>昵称：</p>
+        <div class="name-container">
+            <el-input class="input" v-model="username"></el-input>
+            <el-button @click="submitUsername" class="btn-3" type="success" :disabled="usernameChecker" :icon="Check"
+                circle />
+        </div>
 
-    <p>头像：</p>
-    <el-upload action="/api/avatar" v-model:file-list="fileList" method="put" :before-upload="formatChecker"
-        :on-success="submitAvatar" list-type="picture-card">
-        <el-icon>
-            <Plus />
-        </el-icon>
-        <template #file="{ file }">
-            <div>
-                <img class="el-upload-list__item-thumbnail" :src="file.url" />
-                <span class="el-upload-list__item-actions">
-                    <span class="el-upload-list__item-preview" @click="picturePreview(file)">
-                        <el-icon><zoom-in /></el-icon>
+        <p>头像：</p>
+        <el-upload action="/api/avatar" v-model:file-list="fileList" method="put" :before-upload="formatChecker"
+            :on-success="submitAvatar" list-type="picture-card">
+            <el-icon>
+                <Plus />
+            </el-icon>
+            <template #file="{ file }">
+                <div>
+                    <img class="el-upload-list__item-thumbnail" :src="file.url" />
+                    <span class="el-upload-list__item-actions">
+                        <span class="el-upload-list__item-preview" @click="picturePreview(file)">
+                            <el-icon><zoom-in /></el-icon>
+                        </span>
                     </span>
-                </span>
-            </div>
-        </template>
-    </el-upload>
-    <el-dialog v-model="dialogVisible">
-        <img :src="dialogImageUrl" />
-    </el-dialog>
+                </div>
+            </template>
+        </el-upload>
+        <el-dialog v-model="dialogVisible">
+            <img :src="dialogImageUrl" />
+        </el-dialog>
 
-    <p>我发布的帖子：</p>
-    <RouterLink to="/mypost"><el-button class="btn-1">查看</el-button></RouterLink>
+        <p>我发布的帖子：</p>
+        <RouterLink to="/mypost" class="btn-1"><el-button>查看</el-button></RouterLink>
 
-    <p>黑名单：</p>
-    <RouterLink to="/blacklist"><el-button class="btn-1">查看</el-button></RouterLink>
+        <p>黑名单：</p>
+        <RouterLink to="/blacklist" class="btn-1"><el-button>查看</el-button></RouterLink>
 
-    <h2>修改密码</h2>
+        <h2>修改密码</h2>
 
-    <p>请输入原密码：</p>
-    <el-input class="input" v-model="primaryPassword" show-password></el-input>
+        <p>请输入原密码：</p>
+        <el-input class="input" v-model="primaryPassword" show-password></el-input>
 
-    <p>请输入修改后的密码：</p>
-    <el-input class="input" v-model="newPassword" show-password></el-input>
+        <p>请输入修改后的密码：</p>
+        <el-input class="input" v-model="newPassword" show-password></el-input>
 
-    <el-button @click="submitPassword" class="btn-2" type="primary" :disabled="passwordChecker">修改</el-button>
+        <el-button @click="submitPassword" class="btn-2" type="primary" :disabled="passwordChecker" :color="oklchToHex(0.85, 0.08, store.color)">修改</el-button>
+    </div>
 </div>
 </template>
 
@@ -127,9 +129,7 @@ const picturePreview = (file: UploadFile) => {
     display: flex;
     flex-direction: column;
     margin-left: 50px;
-    width: calc(100% - 350px);
     gap: 10px;
-    background-color: var(--bg-color);
 }
 
 .name-container {
@@ -150,6 +150,11 @@ const picturePreview = (file: UploadFile) => {
 .btn-2 {
     margin-top: 40px;
     width: 80px;
+    color: white;
+}
+
+.btn-2:hover {
+    color: white;
 }
 
 .input {

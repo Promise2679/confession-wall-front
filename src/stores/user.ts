@@ -7,8 +7,9 @@ const userStore = defineStore('user', () => {
   const isLogin = ref(false)
   const token = ref('')
   const color = ref(0)
+  const fontSize = ref(1)
 
-  return { username, isLogin, userid, token, color }
+  return { username, isLogin, userid, token, color, fontSize }
 })
 
 export default userStore
