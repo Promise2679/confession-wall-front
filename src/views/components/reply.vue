@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+import type { Rep } from '@/models/models';
+import { whenever } from '@vueuse/core';
 
 interface Props {
-    replyid: number
-    author: string
-    reply_to?: string
-    content: string
+    data: Rep
 }
 
 interface Emits {
@@ -18,16 +17,16 @@ const emit = defineEmits<Emits>()
 const response = ref(false)
 
 // 点击回复按钮时，更新回复对象
-watch(response, (value: boolean) => value && emit('response', prop.author, prop.replyid))
+whenever(response, () => emit('response', prop.data.author, prop.data.id))
 </script>
 
 <template>
 <div class="reply">
     <div class="avatar-container">
         <img src="@/asset/default_avatar.webp" class="avatar">
-        <span>{{ author }}</span>
+        <span>{{ data.author }}</span>
     </div>
-    <div class="content">{{ (reply_to ? `回复：${reply_to}` : '') + content }}</div>
+    <div class="content">{{ (data.reply_to ? `回复：${data.reply_to}` : '') + data.content }}</div>
     <div class="methods">
         <font-awesome-icon class="method" @click="response = !response" icon="fa-solid fa-comment-dots" />
     </div>

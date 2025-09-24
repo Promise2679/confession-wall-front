@@ -3,13 +3,15 @@ import Card from '@/views/components/blacklist-card.vue'
 import { onMounted, ref, type Ref } from 'vue';
 import axios from '@/request/request'
 import { ElNotification, ElMessage } from 'element-plus';
+import { type Blocklist } from '@/models/models';
 
-const blacklist: Ref<number[]> = ref([])
+const blacklist: Ref<Blocklist[]> = ref([])
 
 const getBlacklist = () => {
     axios.get('/api/blacklist').then(res => {
+        blacklist.value = res.data.data
         if (res.data.code === 200) {
-            blacklist.value = res.data.data
+
         } else {
             ElNotification({ message: `获取失败：${res.data.msg}`, type: 'error', duration: 1500 })
         }
@@ -29,8 +31,7 @@ onMounted(() => {
             <RouterLink to="/profile"><el-button>返回</el-button></RouterLink>
         </div>
         <div class="list-container">
-            <Card />
-            <Card />
+            <Card v-for="item in blacklist" :key="item.block_id" :data="item" />
         </div>
     </div>
 </div>

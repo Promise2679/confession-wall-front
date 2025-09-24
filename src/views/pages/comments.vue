@@ -8,15 +8,8 @@ import { Picture } from '@element-plus/icons-vue';
 import axios from '@/request/request'
 import oklchToHex from '@/utils/oklch2hex';
 import userStore from '@/stores/user';
+import { type Post } from '@/models/models';
 
-interface Post {
-    id: number
-    author: string
-    author_id: number
-    content: string
-    picture: string[]
-    comments: number
-}
 
 const store = userStore()
 
@@ -35,8 +28,10 @@ const placeholderContent = ref(placeholderList[Math.floor(Math.random() * placeh
 
 const getPosts = () => {
     axios.get("/api/post").then(res => {
+        postList.value = res.data.data
+        console.log(res.data)
         if (res.data.code === 200) {
-            postList.value = res.data.data
+
         } else {
             ElMessage({ message: `无法获取帖子内容:${res.data.msg}`, type: "error", duration: 1500 })
         }
@@ -82,9 +77,7 @@ watch(isAnonymous, value => {
 <template>
 <div class="container">
     <div class="comments">
-        <Comment v-for="item in postList" :key="item.id" :postid="item.id" :author="item.author"
-            :authorid="item.author_id" :content="item.content" :comments="item.comments" :picture="item.picture"
-            @change="getPosts" />
+        <Comment v-for="item in postList" :key="item.id" :data="item" @change="getPosts" />
     </div>
     <div class="input" v-loading="isSend">
         <el-input v-model="inputContent" style="width: 100%" rows="5" type="textarea"

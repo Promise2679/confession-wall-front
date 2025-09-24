@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import userStore from '@/stores/user';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { debounce } from 'lodash';
+import { watchDebounced } from '@vueuse/core';
 
 const store = userStore()
 const router = useRouter()
@@ -10,15 +10,15 @@ const router = useRouter()
 const fontSize = ref(store.fontSize)
 const color = ref(store.color)
 
-const updateFontsize = debounce(value => {
+const updateFontsize = (value: number) => {
     store.fontSize = value
     document.documentElement.style.setProperty('--font-size', `${fontSize.value}em`)
-}, 100, { 'trailing': true })
+}
 
-const updateColor = debounce(value => {
+const updateColor = (value: number) => {
     store.color = value
     document.documentElement.style.setProperty('--color', `${color.value}`)
-})
+}
 
 const logout = () => {
     store.username = ''
@@ -26,13 +26,13 @@ const logout = () => {
     router.push({ name: 'login' })
 }
 
-watch(fontSize, value => {
+watchDebounced(fontSize, value => {
     updateFontsize(value)
-})
+}, { debounce: 500, maxWait: 500 })
 
-watch(color, value => {
+watchDebounced(color, value => {
     updateColor(value)
-})
+}, { debounce: 500, maxWait: 500 })
 </script>
 
 <template><el-affix>

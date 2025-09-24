@@ -5,25 +5,15 @@ import Reply from './reply.vue'
 import axios from '@/request/request'
 import oklchToHex from '@/utils/oklch2hex'
 import userStore from '@/stores/user'
+import type { Post, Rep } from '@/models/models'
+import { whenever } from '@vueuse/core'
 
 interface Props {
-    postid: number
-    author: string
-    authorid: number
-    content: string
-    comments: number
-    picture: string[]
+    data: Post
 }
 
 interface Emits {
     change: []
-}
-
-interface Reply {
-    id: number
-    author: string
-    reply_to?: string
-    content: string
 }
 
 const store = userStore()
@@ -31,24 +21,24 @@ const store = userStore()
 const prop = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
-const replyList: Ref<Reply[]> = ref([])
+const replyList: Ref<Rep[]> = ref([])
 const showComment = ref(false)
 const inputContent = ref('')
 const isSend = ref(false)
-const response = ref(prop.author)
+const response = ref(prop.data.author)
 const replyid = ref(0)
 
 const sendReply = () => {
     isSend.value = true
     const data = {
-        post_id: prop.postid,
+        post_id: prop.data.id,
         reply_id: replyid.value,
         content: inputContent.value,
     }
     axios.post('/api/reply', data).then(res => {
         if (res.data.code === 200) {
             ElNotification({ message: '发布成功！', type: 'success', duration: 1500 })
-            getReply(prop.postid)
+            getReply(prop.data.id)
         } else {
             ElNotification({ message: `发布失败：${res.data.msg}`, type: 'error', duration: 1500 })
         }
@@ -56,10 +46,9 @@ const sendReply = () => {
         .finally(() => {
             isSend.value = false
             inputContent.value = ''
-            response.value = prop.author
+            response.value = prop.data.author
             replyid.value = 0
         })
-
 }
 
 const getReply = (id: number) => {
@@ -69,8 +58,9 @@ const getReply = (id: number) => {
         }
     }
     axios.get('/api/reply', data).then(res => {
+        replyList.value = res.data.data
         if (res.data.code === 200) {
-            replyList.value = res.data.data
+            
         } else {
             ElNotification({ message: `获取评论失败：${res.data.msg}`, type: 'error', duration: 1500 })
         }
@@ -79,7 +69,7 @@ const getReply = (id: number) => {
 
 const addBlacklist = () => {
     const data = {
-        block_id: prop.authorid
+        block_id: prop.data.id
     }
     axios.post('/api/block', data).then(res => {
         if (res.data.code === 200) {
@@ -97,12 +87,10 @@ const changeResponse = (name: string, id: number) => {
 }
 
 // 点击评论按钮时，获取评论列表，并初始化
-watch(showComment, value => {
-    if (value) {
-        getReply(prop.postid)
-        response.value = prop.author
-        replyid.value = 0
-    }
+whenever(showComment, () => {
+    getReply(prop.data.id)
+    response.value = prop.data.author
+    replyid.value = 0
 })
 </script>
 
@@ -111,27 +99,25 @@ watch(showComment, value => {
     <div class="comment">
         <div class="avatar-container">
             <img src="@/asset/default_avatar.webp" class="avatar">
-            <span>{{ author }}</span>
+            <span>{{ data.author }}</span>
         </div>
         <div class="content">
-            {{ content }}
+            {{ data.content }}
             <div class="pic-container">
-                <el-image src="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
-                    style="width: 100px; height: 100px;"
-                    :preview-src-list="['https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg']" />
+                <el-image v-for="(index, item) in data.picture" :src="item" style="width: 100px; height: 100px;"
+                    :preview-src-list="data.picture" :initial-index="index" />
             </div>
         </div>
         <div class="methods">
             <div class="method" @click="addBlacklist">拉黑</div>
             <div @click="showComment = !showComment" class="method">
-                <font-awesome-icon icon="fa-solid fa-comment-dots" />{{ comments }}
+                <font-awesome-icon icon="fa-solid fa-comment-dots" />{{ data.comments }}
             </div>
         </div>
     </div>
     <Transition>
         <div v-if="showComment" class="replies">
-            <Reply v-for="item in replyList" :key="item.id" :author="item.author" :content="item.content"
-                :replyid="item.id" @response="changeResponse" :reply_to="item.reply_to" />
+            <Reply v-for="item in replyList" :key="item.id" :data="item" @response="changeResponse" />
             <div class="input" v-loading="isSend">
                 <el-input v-model="inputContent" style="width: 100%" rows="5" type="textarea"
                     :placeholder="`回复 ${response}：`"></el-input>

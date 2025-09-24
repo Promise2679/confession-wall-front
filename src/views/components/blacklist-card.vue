@@ -1,15 +1,17 @@
 <script setup lang="ts">
+import { type Blocklist } from '@/models/models';
+
 interface Props {
-    id?: number
+    data: Blocklist
 }
 
-defineProps<Props>()
+const prop = defineProps<Props>()
 </script>
 
 <template>
 <div class="card">
-    <img class="avatar" src="@/asset/default_avatar.webp">
-    <div>111111</div>
+    <img class="avatar" :src="prop.data.avatar">
+    <div>{{ data.block_name }}</div>
     <el-button class="btn" size="small">取消拉黑</el-button>
 </div>
 </template>
