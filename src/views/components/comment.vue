@@ -59,11 +59,11 @@ const getReply = (id: number) => {
     }
     axios.get('/api/reply', data).then(res => {
         replyList.value = res.data.data
-        if (res.data.code === 200) {
-            
-        } else {
-            ElNotification({ message: `获取评论失败：${res.data.msg}`, type: 'error', duration: 1500 })
-        }
+        // if (res.data.code === 200) {
+
+        // } else {
+        //     ElNotification({ message: `获取评论失败：${res.data.msg}`, type: 'error', duration: 1500 })
+        // }
     }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
 }
 
@@ -72,12 +72,12 @@ const addBlacklist = () => {
         block_id: prop.data.id
     }
     axios.post('/api/block', data).then(res => {
-        if (res.data.code === 200) {
-            ElNotification({ message: '已添加到黑名单', type: 'success', duration: 1500 })
-        } else {
-            ElNotification({ message: `添加失败：${res.data.msg}`, type: 'error', duration: 1500 })
-            emit('change')
-        }
+        emit('change')
+        // if (res.data.code === 200) {
+        //     ElNotification({ message: '已添加到黑名单', type: 'success', duration: 1500 })
+        // } else {
+        //     ElNotification({ message: `添加失败：${res.data.msg}`, type: 'error', duration: 1500 })
+        // }
     }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
 }
 
@@ -121,7 +121,7 @@ whenever(showComment, () => {
             <div class="input" v-loading="isSend">
                 <el-input v-model="inputContent" style="width: 100%" rows="5" type="textarea"
                     :placeholder="`回复 ${response}：`"></el-input>
-                <el-button @click="sendReply" style="width: 100%" :disabled="inputContent.length === 0"
+                <el-button @click="sendReply" style="width: 100%; color: white;" :disabled="inputContent.length === 0"
                     :color="oklchToHex(0.85, 0.08, store.color)">发布</el-button>
             </div>
         </div>

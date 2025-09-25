@@ -31,7 +31,7 @@ onMounted(() => {
             <RouterLink to="/profile"><el-button>返回</el-button></RouterLink>
         </div>
         <div class="list-container">
-            <Card v-for="item in blacklist" :key="item.block_id" :data="item" />
+            <Card v-for="item in blacklist" :key="item.block_id" :data="item" @change="getBlacklist" />
         </div>
     </div>
 </div>

@@ -1,18 +1,33 @@
 <script setup lang="ts">
 import { type Blocklist } from '@/models/models';
+import axios from '@/request/request';
 
 interface Props {
     data: Blocklist
 }
 
+interface Emits {
+    change: []
+}
+
 const prop = defineProps<Props>()
+const emit = defineEmits<Emits>()
+
+const removeBlacklist =(id: number) => {
+    const data = {
+        block_id: id,
+    }
+    axios.post('/api/block', data).then(res => {
+        emit('change')
+    })
+}
 </script>
 
 <template>
 <div class="card">
     <img class="avatar" :src="prop.data.avatar">
     <div>{{ data.block_name }}</div>
-    <el-button class="btn" size="small">取消拉黑</el-button>
+    <el-button @click="removeBlacklist(prop.data.block_id)" class="btn" size="small">取消拉黑</el-button>
 </div>
 </template>
 

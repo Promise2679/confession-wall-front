@@ -30,11 +30,11 @@ const getPosts = () => {
     axios.get("/api/post").then(res => {
         postList.value = res.data.data
         console.log(res.data)
-        if (res.data.code === 200) {
+        // if (res.data.code === 200) {
 
-        } else {
-            ElMessage({ message: `无法获取帖子内容:${res.data.msg}`, type: "error", duration: 1500 })
-        }
+        // } else {
+        //     ElMessage({ message: `无法获取帖子内容:${res.data.msg}`, type: "error", duration: 1500 })
+        // }
     }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
 }
 
