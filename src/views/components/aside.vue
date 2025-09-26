@@ -25,13 +25,9 @@ const logout = () => {
     router.push({ name: 'login' })
 }
 
-watchDebounced(fontSize, value => {
-    updateFontsize(value)
-}, { debounce: 500, maxWait: 500 })
-
-watchDebounced(color, value => {
-    updateColor(value)
-}, { debounce: 500, maxWait: 500 })
+// 实时监听，更新主题色和全局字体
+watchDebounced(fontSize, value => updateFontsize(value), { debounce: 500, maxWait: 500 })
+watchDebounced(color, value => updateColor(value), { debounce: 500, maxWait: 500 })
 </script>
 
 <template><el-affix>

@@ -21,7 +21,7 @@ const fileList: Ref<UploadUserFile[]> = ref([
     {
         name: 'avatar',
         url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-    },
+    }
 ])
 
 const usernameChecker = computed(() => username.value === '' || username.value === store.username)
@@ -31,14 +31,10 @@ const submitUsername = () => {
     const data = {
         name: username.value
     }
-    axios.put('/api/user/name', data).then(res => {
-        if (res.data.code === 200) {
-            store.username = username.value
-            ElNotification({ message: '修改成功！', type: 'success', duration: 1500 })
-        } else {
-            ElNotification({ message: `修改失败：${res.data.msg}`, type: 'error', duration: 1500 })
-        }
-    }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
+    axios.put('/api/user/name', data).then(() => {
+        store.username = username.value
+        ElNotification({ message: '修改成功！', type: 'success', duration: 1500 })
+    })
 }
 
 // 上传头像成功后，移除前一个头像
@@ -53,13 +49,7 @@ const submitPassword = () => {
         old_password: primaryPassword.value,
         new_password: newPassword.value,
     }
-    axios.put('/api/user/password', data).then(res => {
-        if (res.data.code === 200) {
-            ElNotification({ message: '修改成功！', type: 'success', duration: 1500 })
-        } else {
-            ElNotification({ message: `修改失败：${res.data.msg}`, type: 'error', duration: 1500 })
-        }
-    }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
+    axios.put('/api/user/password', data).then(() => ElNotification({ message: '修改成功！', type: 'success', duration: 1500 }))
         .finally(() => {
             primaryPassword.value = ''
             newPassword.value = ''
@@ -90,6 +80,7 @@ const picturePreview = (file: UploadFile) => {
             <el-icon>
                 <Plus />
             </el-icon>
+            <!-- 放大图片按钮 -->
             <template #file="{ file }">
                 <div>
                     <img class="el-upload-list__item-thumbnail" :src="file.url" />
@@ -119,7 +110,8 @@ const picturePreview = (file: UploadFile) => {
         <p>请输入修改后的密码：</p>
         <el-input class="input" v-model="newPassword" show-password></el-input>
 
-        <el-button @click="submitPassword" class="btn-2" type="primary" :disabled="passwordChecker" :color="oklchToHex(0.85, 0.08, store.color)">修改</el-button>
+        <el-button @click="submitPassword" class="btn-2" type="primary" :disabled="passwordChecker"
+            :color="oklchToHex(0.85, 0.08, store.color)">修改</el-button>
     </div>
 </div>
 </template>

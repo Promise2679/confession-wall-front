@@ -13,6 +13,7 @@ const userStore = defineStore('user', () => {
   const fontSize = useStorage('font-size', 1)
   const isLogin = ref(true)
 
+  // 重置函数，注销时使用
   const $reset = () => {
     userid.value = null
     username.value = ''

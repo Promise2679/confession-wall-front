@@ -5,18 +5,17 @@ import Profile from '@/views/pages/profile.vue'
 import Blacklist from '@/views/pages/blacklist.vue'
 import Myposts from '@/views/pages/myposts.vue'
 import userStore from '@/stores/user'
-import notFound from '@/views/pages/notFound.vue'
+import NotFound from '@/views/pages/404.vue'
 
 // 路由注册
 // 按顺序分别为首页，登录页，个人档案，黑名单，个人发布的帖子
 const routes = [
   { path: '/', name: 'home', component: Comments },
-  { path: '/404', name: 'notFound', component: notFound },
   { path: '/login', name: 'login', component: Login },
   { path: '/profile', name: 'profile', component: Profile },
   { path: '/blacklist', name: 'blacklist', component: Blacklist },
   { path: '/mypost', name: 'mypost', component: Myposts },
-  { path: '/:pathMatch(.*)*', name: 'notFound', component: notFound },
+  { path: '/:pathMatch(.*)*', name: 'notFound', component: NotFound },
 ]
 
 const router = createRouter({

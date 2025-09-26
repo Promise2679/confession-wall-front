@@ -7,29 +7,20 @@ import { type Blocklist } from '@/models/models';
 
 const blacklist: Ref<Blocklist[]> = ref([])
 
-const getBlacklist = () => {
-    axios.get('/api/blacklist').then(res => {
-        blacklist.value = res.data.data
-        if (res.data.code === 200) {
+const getBlacklist = () => axios.get('/api/blacklist').then(res => blacklist.value = res.data.data)
 
-        } else {
-            ElNotification({ message: `获取失败：${res.data.msg}`, type: 'error', duration: 1500 })
-        }
-    }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
-}
-
-onMounted(() => {
-    getBlacklist()
-})
+onMounted(() => getBlacklist())
 </script>
 
 <template>
 <div style="width: 100%; background-color: var(--bg-color);">
     <div class="container">
+        <!-- 标题部分 -->
         <div class="title-container">
             <h2>黑名单</h2>
             <RouterLink to="/profile"><el-button>返回</el-button></RouterLink>
         </div>
+        <!-- 主体部分 -->
         <div class="list-container">
             <Card v-for="item in blacklist" :key="item.block_id" :data="item" @change="getBlacklist" />
         </div>

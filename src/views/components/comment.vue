@@ -12,6 +12,8 @@ interface Props {
     data: Post
 }
 
+// change 事件，当点击拉黑按钮时触发
+// 父组件会重新获取帖子列表
 interface Emits {
     change: []
 }
@@ -35,20 +37,15 @@ const sendReply = () => {
         reply_id: replyid.value,
         content: inputContent.value,
     }
-    axios.post('/api/reply', data).then(res => {
-        if (res.data.code === 200) {
-            ElNotification({ message: '发布成功！', type: 'success', duration: 1500 })
-            getReply(prop.data.id)
-        } else {
-            ElNotification({ message: `发布失败：${res.data.msg}`, type: 'error', duration: 1500 })
-        }
-    }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
-        .finally(() => {
-            isSend.value = false
-            inputContent.value = ''
-            response.value = prop.data.author
-            replyid.value = 0
-        })
+    axios.post('/api/reply', data).then(() => {
+        ElNotification({ message: '发布成功！', type: 'success', duration: 1500 })
+        getReply(prop.data.id)
+    }).finally(() => {
+        isSend.value = false
+        inputContent.value = ''
+        response.value = prop.data.author
+        replyid.value = 0
+    })
 }
 
 const getReply = (id: number) => {
@@ -57,28 +54,14 @@ const getReply = (id: number) => {
             post_id: id,
         }
     }
-    axios.get('/api/reply', data).then(res => {
-        replyList.value = res.data.data
-        // if (res.data.code === 200) {
-
-        // } else {
-        //     ElNotification({ message: `获取评论失败：${res.data.msg}`, type: 'error', duration: 1500 })
-        // }
-    }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
+    axios.get('/api/reply', data).then(res => replyList.value = res.data.data)
 }
 
 const addBlacklist = () => {
     const data = {
         block_id: prop.data.id
     }
-    axios.post('/api/block', data).then(res => {
-        emit('change')
-        // if (res.data.code === 200) {
-        //     ElNotification({ message: '已添加到黑名单', type: 'success', duration: 1500 })
-        // } else {
-        //     ElNotification({ message: `添加失败：${res.data.msg}`, type: 'error', duration: 1500 })
-        // }
-    }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
+    axios.post('/api/block', data).then(() => emit('change'))
 }
 
 const changeResponse = (name: string, id: number) => {
@@ -96,11 +79,14 @@ whenever(showComment, () => {
 
 <template>
 <div class="comment-container">
+    <!-- 帖子卡片 -->
     <div class="comment">
+        <!-- 作者部分，显示头像和昵称 -->
         <div class="avatar-container">
             <img :src="data.avatar" class="avatar">
             <span>{{ data.author }}</span>
         </div>
+        <!-- 正文部分，显示文字和图片 -->
         <div class="content">
             {{ data.content }}
             <div class="pic-container">
@@ -108,6 +94,7 @@ whenever(showComment, () => {
                     :preview-src-list="data.picture" :initial-index="index" />
             </div>
         </div>
+        <!-- 按钮部分，可以进行相关操作 -->
         <div class="methods">
             <div class="method" @click="addBlacklist">拉黑</div>
             <div @click="showComment = !showComment" class="method">
@@ -115,9 +102,12 @@ whenever(showComment, () => {
             </div>
         </div>
     </div>
+    <!-- 评论部分，点击评论按钮时显示 -->
+    <!-- 还添加了过渡小动画 -->
     <Transition>
         <div v-if="showComment" class="replies">
             <Reply v-for="item in replyList" :key="item.id" :data="item" @response="changeResponse" />
+            <!-- 这条注释上面是评论，下面是评论框 -->
             <div class="input" v-loading="isSend">
                 <el-input v-model="inputContent" style="width: 100%" rows="5" type="textarea"
                     :placeholder="`回复 ${response}：`"></el-input>

@@ -1,12 +1,7 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
 <div class="card-container">
     <div class="card">
         <h1 style="margin: 0">404 Not Found</h1>
-
         <p>未找到该资源</p>
         <p>请返回首页</p>
     </div>

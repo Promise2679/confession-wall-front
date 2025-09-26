@@ -19,18 +19,12 @@ const login = () => {
         password: password.value,
     }
     axios.post('/api/login', data).then(res => {
-        if (res.data.code === 200) {
-            store.username = username.value
-            store.isLogin = true
-            store.userid = res.data.data.user_id
-            store.token = res.data.data.token
-            ElNotification({ message: '欢迎回来！', type: 'success', duration: 1500 })
-            router.push({ name: 'home' })
-        } else {
-            ElNotification({ message: `登录失败：${res.data.msg}`, type: 'error' })
-        }
-    }).catch(err => {
-        ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 })
+        store.username = username.value
+        store.isLogin = true
+        store.userid = res.data.data.user_id
+        store.token = res.data.data.token
+        ElNotification({ message: '欢迎回来！', type: 'success', duration: 1500 })
+        router.push({ name: 'home' })
     }).finally(() => {
         username.value = ''
         password.value = ''
@@ -42,18 +36,11 @@ const reg = () => {
         username: username.value,
         password: password.value,
     }
-    axios.post('/api/reg', data).then(res => {
-        if (res.data.code === 200) {
-            ElNotification({ message: '注册成功，请重新输入账号', type: 'success', duration: 1500 })
-        } else {
-            ElNotification({ message: `注册失败：${res.data.msg}`, type: 'error' })
-        }
-    }).catch(err => {
-        ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 })
-    }).finally(() => {
-        username.value = ''
-        password.value = ''
-    })
+    axios.post('/api/reg', data).then(() => ElNotification({ message: '注册成功，请重新输入账号', type: 'success', duration: 1500 }))
+        .finally(() => {
+            username.value = ''
+            password.value = ''
+        })
 }
 </script>
 

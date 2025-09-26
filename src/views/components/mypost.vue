@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ElMessageBox, ElNotification, ElMessage } from 'element-plus';
+import { ElMessageBox, ElNotification } from 'element-plus';
 import axios from '@/request/request'
 
 interface Props {
@@ -7,6 +7,8 @@ interface Props {
     content: string
 }
 
+// change 事件，当删除或修改帖子时触发
+// 父组件会重新获取用户的帖子
 interface Emits {
     change: []
 }
@@ -25,14 +27,10 @@ const deletePost = () => {
                 post_id: prop.postid
             }
         }
-        axios.delete('/api/post', data).then(res => {
-            if (res.data.code === 200) {
-                ElNotification({ message: '删除成功！', type: 'success', duration: 1500 })
-                emit('change')
-            } else {
-                ElNotification({ message: `删除失败：${res.data.msg}`, type: 'error', duration: 1500 })
-            }
-        }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
+        axios.delete('/api/post', data).then(() => {
+            ElNotification({ message: '删除成功！', type: 'success', duration: 1500 })
+            emit('change')
+        })
     })
 }
 
@@ -52,14 +50,10 @@ const editPost = () => {
             post_id: prop.postid,
             content: value,
         }
-        axios.put('/api/post', data).then(res => {
-            if (res.data.code === 200) {
-                ElNotification({ message: '修改成功！', type: 'success', duration: 1500 })
-                emit('change')
-            } else {
-                ElNotification({ message: `修改失败：${res.data.msg}`, type: 'error', duration: 1500 })
-            }
-        }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
+        axios.put('/api/post', data).then(() => {
+            ElNotification({ message: '修改成功！', type: 'success', duration: 1500 })
+            emit('change')
+        })
     })
 }
 </script>
@@ -68,13 +62,14 @@ const editPost = () => {
 <div class="comment">
     <div class="content">
         {{ content }}
+        <!-- 这条注释的上面是正文，下面是图片 -->
         <div class="pic-container">
             <el-image src="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
                 style="width: 100px; height: 100px;"
                 :preview-src-list="['https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg']" />
         </div>
     </div>
-
+    <!-- 按钮 -->
     <div class="methods">
         <div class="method" @click="deletePost">
             <font-awesome-icon icon="fa-solid fa-xmark" />删除

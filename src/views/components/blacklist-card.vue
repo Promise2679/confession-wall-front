@@ -6,6 +6,8 @@ interface Props {
     data: Blocklist
 }
 
+// change 事件，当点击取消拉黑按钮时触发
+// 父组件会重新获取黑名单列表
 interface Emits {
     change: []
 }
@@ -17,9 +19,7 @@ const removeBlacklist =(id: number) => {
     const data = {
         block_id: id,
     }
-    axios.post('/api/block', data).then(res => {
-        emit('change')
-    })
+    axios.post('/api/block', data).then(() => emit('change'))
 }
 </script>
 

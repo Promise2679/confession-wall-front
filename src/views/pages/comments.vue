@@ -23,20 +23,10 @@ const isSend = ref(false)
 const isAnonymous = ref(false)
 const isInvisible = ref(false)
 
-// placeholder 随机内容
+// 从 placeholderList 中随机选择一个元素，当做 placeholder 中的内容
 const placeholderContent = ref(placeholderList[Math.floor(Math.random() * placeholderList.length)])
 
-const getPosts = () => {
-    axios.get("/api/post").then(res => {
-        postList.value = res.data.data
-        console.log(res.data)
-        // if (res.data.code === 200) {
-
-        // } else {
-        //     ElMessage({ message: `无法获取帖子内容:${res.data.msg}`, type: "error", duration: 1500 })
-        // }
-    }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
-}
+const getPosts = () => axios.get("/api/post").then(res => postList.value = res.data.data)
 
 const sendPost = () => {
     isSend.value = true
@@ -46,33 +36,22 @@ const sendPost = () => {
         anonymous: isAnonymous.value,
         invisible: isInvisible.value,
     }
-    axios.post('/api/post', data).then(res => {
-        if (res.data.code === 200) {
-            getPosts()
-            ElNotification({ message: '发布成功！', type: 'success', duration: 1500 })
-        } else {
-            ElNotification({ message: `发布失败：${res.data.msg}`, type: 'error', duration: 1500 })
-        }
-    }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
-        .finally(() => {
-            inputContent.value = ''
-            isSend.value = false
-        })
+    axios.post('/api/post', data).then(() => {
+        getPosts()
+        ElNotification({ message: '发布成功！', type: 'success', duration: 1500 })
+    }).finally(() => {
+        inputContent.value = ''
+        isSend.value = false
+    })
 }
 
-const addUrl: UploadProps['onSuccess'] = res => {
-    pictureList.value.push(res.data)
-}
+// 上传图片后，将返回的 url 存入 pictureList，方便后续上传给后端
+const addUrl: UploadProps['onSuccess'] = res => pictureList.value.push(res.data)
 
-onMounted(() => {
-    console.log(store.isLogin)
-    getPosts()
-})
+onMounted(() => getPosts())
 
 // 点击匿名按钮时，更换 placeholder 内容
-watch(isAnonymous, value => {
-    placeholderContent.value = value ? '勇敢一点，不留名也可以' : placeholderList[Math.floor(Math.random() * placeholderList.length)]
-})
+watch(isAnonymous, value => placeholderContent.value = value ? '勇敢一点，不留名也可以' : placeholderList[Math.floor(Math.random() * placeholderList.length)])
 </script>
 
 <template>
@@ -80,10 +59,12 @@ watch(isAnonymous, value => {
     <div class="comments">
         <Comment v-for="item in postList" :key="item.id" :data="item" @change="getPosts" />
     </div>
+    <!-- 这条注释的上面是正文，下面是输入框 -->
     <div class="input" v-loading="isSend">
         <el-input v-model="inputContent" style="width: 100%" rows="5" type="textarea"
             :placeholder="placeholderContent"></el-input>
         <div class="btn-container">
+            <!-- 上传图片部分 -->
             <el-upload action="/api/picture" :before-upload="formatChecker" :on-success="addUrl" class="icon"
                 list-type="picture" :limit="9">
                 <el-icon>
@@ -91,10 +72,12 @@ watch(isAnonymous, value => {
                 </el-icon>
             </el-upload>
         </div>
+        <!-- 匿名和仅自己可见的按钮 -->
         <div>
             <el-checkbox v-model="isAnonymous" label="匿名" />
             <el-checkbox v-model="isInvisible" label="仅自己可见" />
         </div>
+        <!-- 炫酷的适配了自定义配色功能的按钮 -->
         <el-button @click="sendPost" style="width: 100%; color: white" :disabled="inputContent.length === 0"
             :color="oklchToHex(0.85, 0.08, store.color)">发布</el-button>
     </div>

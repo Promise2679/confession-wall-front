@@ -7,17 +7,14 @@ interface Props {
     data: Rep
 }
 
+// response 事件，当点击回复评论按钮时触发
+// 父组件会修改回复对象，并更改评论框中的回复 id
 interface Emits {
     response: [name: string, id: number]
 }
 
 const prop = defineProps<Props>()
-const emit = defineEmits<Emits>()
-
-const response = ref(false)
-
-// 点击回复按钮时，更新回复对象
-whenever(response, () => emit('response', prop.data.author, prop.data.id))
+defineEmits<Emits>()
 </script>
 
 <template>
@@ -26,9 +23,11 @@ whenever(response, () => emit('response', prop.data.author, prop.data.id))
         <img :src="data.avatar" class="avatar">
         <span>{{ data.author }}</span>
     </div>
-    <div class="content">{{ (data.reply_to ? `回复：${data.reply_to}` : '') + data.content }}</div>
+    <!-- 正文部分，若回复的是评论则添加前缀 -->
+    <div class="content">{{ (data.reply_to ? `回复 ${data.reply_to}：` : '') + data.content }}</div>
+    <!-- 回复按钮，点击触发 emit -->
     <div class="methods">
-        <font-awesome-icon class="method" @click="response = !response" icon="fa-solid fa-comment-dots" />
+        <font-awesome-icon class="method" @click="$emit('response', prop.data.author, prop.data.id)" icon="fa-solid fa-comment-dots" />
     </div>
 </div>
 </template>

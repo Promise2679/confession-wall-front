@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Comment from '@/views/components/mypost.vue';
 import axios from '@/request/request'
-import { ElNotification, ElMessage } from 'element-plus';
 import { onMounted, ref, type Ref } from 'vue';
 
 interface Mypost {
@@ -11,19 +10,9 @@ interface Mypost {
 
 const mypostList: Ref<Mypost[]> = ref([])
 
-const getMyposts = () => {
-    axios.get('/api/mypost').then(res => {
-        if (res.data.code === 200) {
-            mypostList.value = res.data.data
-        } else {
-            ElNotification({ message: `获取失败：${res.data.msg}`, type: 'error', duration: 1500 })
-        }
-    }).catch(err => ElMessage({ message: `Error: ${err}`, type: "error", duration: 1500 }))
-}
+const getMyposts = () => axios.get('/api/mypost').then(res => mypostList.value = res.data.data)
 
-onMounted(() => {
-    getMyposts()
-})
+onMounted(() => getMyposts())
 </script>
 
 <template>

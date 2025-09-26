@@ -1,9 +1,11 @@
+// 黑名单
 export interface Blocklist {
     block_id: number
     block_name: string
     avatar: string
 }
 
+// 帖子
 export interface Post {
     id: number
     author: string
@@ -14,6 +16,7 @@ export interface Post {
     comments: number
 }
 
+// 评论
 export interface Rep {
     id: number
     author: string
