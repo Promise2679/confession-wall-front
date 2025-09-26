@@ -15,7 +15,7 @@ interface Emits {
 const prop = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
-const removeBlacklist =(id: number) => {
+const removeBlacklist = (id: number) => {
     const data = {
         block_id: id,
     }

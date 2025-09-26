@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, watch, type Ref } from 'vue'
-import { ElNotification, ElMessage } from 'element-plus'
+import { ref, type Ref } from 'vue'
+import { ElNotification } from 'element-plus'
 import Reply from './reply.vue'
 import axios from '@/request/request'
 import oklchToHex from '@/utils/oklch2hex'

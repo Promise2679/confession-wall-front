@@ -27,7 +27,7 @@ const logout = () => {
 
 // 实时监听，更新主题色和全局字体
 watchDebounced(fontSize, value => updateFontsize(value), { debounce: 500, maxWait: 500 })
-watchDebounced(color, value => updateColor(value), { debounce: 500, maxWait: 500 })
+watchDebounced(color, value => updateColor(value), { debounce: 500, maxWait: 50 })
 </script>
 
 <template><el-affix>
@@ -56,7 +56,7 @@ watchDebounced(color, value => updateColor(value), { debounce: 500, maxWait: 500
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    height: 100%;
+    height: 100vh;
     width: 300px;
     background-color: #f8f9fa;
 }

@@ -2,7 +2,6 @@
 import Card from '@/views/components/blacklist-card.vue'
 import { onMounted, ref, type Ref } from 'vue';
 import axios from '@/request/request'
-import { ElNotification, ElMessage } from 'element-plus';
 import { type Blocklist } from '@/models/models';
 
 const blacklist: Ref<Blocklist[]> = ref([])

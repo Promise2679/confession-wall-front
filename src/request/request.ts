@@ -16,18 +16,18 @@ axios.interceptors.request.use(
 )
 
 // 全局错误处理
-axios.interceptors.response.use(
-  (res) => {
-    if (res.data.code === 200) {
-      return res
-    }
-    ElNotification({ message: res.data.msg, type: 'error', duration: 1500 })
-    return Promise.reject(res.data.msg)
-  },
-  (err) => {
-    ElNotification({ message: err, type: 'error', duration: 1500 })
-    return Promise.reject(err)
-  },
-)
+// axios.interceptors.response.use(
+//   (res) => {
+//     if (res.data.code === 200) {
+//       return res
+//     }
+//     ElNotification({ message: res.data.msg, type: 'error', duration: 1500 })
+//     return Promise.reject(res.data.msg)
+//   },
+//   (err) => {
+//     ElNotification({ message: err, type: 'error', duration: 1500 })
+//     return Promise.reject(err)
+//   },
+// )
 
 export default axios

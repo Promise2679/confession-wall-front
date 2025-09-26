@@ -2,7 +2,7 @@
 import { onMounted, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import Comment from '@/views/components/comment.vue';
-import { ElNotification, ElMessage, type UploadProps } from 'element-plus';
+import { ElNotification, type UploadProps } from 'element-plus';
 import { formatChecker } from '@/utils/picUploader';
 import { Picture } from '@element-plus/icons-vue';
 import axios from '@/request/request'

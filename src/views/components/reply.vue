@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
 import type { Rep } from '@/models/models';
-import { whenever } from '@vueuse/core';
 
 interface Props {
     data: Rep

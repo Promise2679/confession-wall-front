@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, type Ref } from 'vue';
-import { ElNotification, ElMessage, type UploadUserFile, type UploadProps, type UploadFile, uploadProps } from 'element-plus';
+import { ElNotification, type UploadUserFile, type UploadProps, type UploadFile } from 'element-plus';
 import { formatChecker } from '@/utils/picUploader';
 import userStore from '@/stores/user';
 import { RouterLink } from 'vue-router';
