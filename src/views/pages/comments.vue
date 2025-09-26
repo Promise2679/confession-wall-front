@@ -65,6 +65,7 @@ const addUrl: UploadProps['onSuccess'] = res => {
 }
 
 onMounted(() => {
+    console.log(store.isLogin)
     getPosts()
 })
 

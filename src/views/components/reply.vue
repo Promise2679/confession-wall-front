@@ -23,7 +23,7 @@ whenever(response, () => emit('response', prop.data.author, prop.data.id))
 <template>
 <div class="reply">
     <div class="avatar-container">
-        <img src="@/asset/default_avatar.webp" class="avatar">
+        <img :src="data.avatar" class="avatar">
         <span>{{ data.author }}</span>
     </div>
     <div class="content">{{ (data.reply_to ? `回复：${data.reply_to}` : '') + data.content }}</div>

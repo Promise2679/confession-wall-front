@@ -17,6 +17,7 @@ export interface Post {
 export interface Rep {
     id: number
     author: string
+    avatar: string
     reply_to?: string
     content: string
 }

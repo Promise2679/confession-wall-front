@@ -21,8 +21,7 @@ const updateColor = (value: number) => {
 }
 
 const logout = () => {
-    store.username = ''
-    store.isLogin = false
+    store.$reset()
     router.push({ name: 'login' })
 }
 
@@ -38,12 +37,12 @@ watchDebounced(color, value => {
 <template><el-affix>
     <div class="aside">
         <div class="head">
-            <img class="avatar" src="@/asset/default_avatar.webp">
+            <img class="avatar" :src="store.avatar">
             <span class="name">{{ store.username.length ? store.username : '未登录' }}</span>
         </div>
-        <RouterLink to="/" class="translate btn">首页</RouterLink>
-        <RouterLink to="/profile" class="translate btn">个人中心</RouterLink>
-        <div style="flex: 1;"></div>
+        <RouterLink to="/" class="btn">首页</RouterLink>
+        <RouterLink to="/profile" class="btn">个人中心</RouterLink>
+        <div style="flex: 1"></div>
         <div class="option">
             <div class="font">主题色</div>
             <input type="range" v-model="color" min="0" max="360" class="color" step="1" style="width: 100%">
@@ -74,10 +73,6 @@ watchDebounced(color, value => {
     transform: translate(20px, 20px);
 }
 
-.translate {
-    transform: translateY(25px);
-}
-
 .avatar {
     width: 50px;
     height: 50px;
@@ -97,6 +92,7 @@ watchDebounced(color, value => {
     justify-content: center;
     text-decoration: none;
     color: black;
+    transform: translateY(25px);
 }
 
 .option {
