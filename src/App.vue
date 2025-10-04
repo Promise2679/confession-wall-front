@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Aside from '@/views/components/aside.vue';
+import Aside from '@/views/components/Aside.vue';
 </script>
 
 <template>

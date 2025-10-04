@@ -9,15 +9,15 @@ const userStore = defineStore('user', () => {
   const username = useStorage('username', '')
   const token = useStorage('token', '')
   const color = useStorage('color', 0)
-  const avatar = useStorage('avatar', './src/asset/default_avatar.webp')
+  const avatar = useStorage('avatar', './src/assets/default_avatar.webp')
   const fontSize = useStorage('font-size', 1)
-  const isLogin = ref(true)
+  const isLogin = ref(false)
 
   // 重置函数，注销时使用
   const $reset = () => {
     userid.value = null
     username.value = ''
-    avatar.value = './src/asset/default_avatar.webp'
+    avatar.value = './src/assets/default_avatar.webp'
     isLogin.value = false
     token.value = ''
   }

@@ -13,7 +13,7 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faThumbsUp, faTriangleExclamation, faXmark, faPen, faCommentDots } from '@fortawesome/free-solid-svg-icons'
+import { faThumbsUp, faTriangleExclamation, faXmark, faPen, faCommentDots, faEye } from '@fortawesome/free-solid-svg-icons'
 
 const app = createApp(App)
 
@@ -24,7 +24,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 
 // 按需引入 font awesome 图标
-library.add(faThumbsUp, faTriangleExclamation, faXmark, faPen, faCommentDots)
+library.add(faThumbsUp, faTriangleExclamation, faXmark, faPen, faCommentDots, faEye)
 app.component('font-awesome-icon', FontAwesomeIcon)
 
 app.use(createPinia())

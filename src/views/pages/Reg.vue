@@ -2,30 +2,26 @@
 import { computed, ref } from 'vue';
 import { ElNotification } from 'element-plus';
 import { useRouter } from 'vue-router';
-import userStore from '@/stores/user';
 import axios from '@/utils/request'
 
-const store = userStore()
 const router = useRouter()
 
+const name = ref('')
 const username = ref('')
 const password = ref('')
 
-const isEmpty = computed(() => username.value === '' || password.value === '')
+const isEmpty = computed(() => name.value === '' || username.value === '' || password.value === '')
 
-const login = () => {
+const reg = () => {
     const data = {
         username: username.value,
         password: password.value,
     }
-    axios.post('/api/login', data).then(res => {
-        store.username = username.value
-        store.isLogin = true
-        store.userid = res.data.data.user_id
-        store.token = res.data.data.token
-        ElNotification({ message: '欢迎回来！', type: 'success', duration: 1500 })
-        router.push({ name: 'home' })
+    axios.post('/api/reg', data).then(() => {
+        ElNotification({ message: '注册成功，请重新输入账号', type: 'success', duration: 1500 })
+        router.push({ name: 'login' })
     }).finally(() => {
+        name.value = ''
         username.value = ''
         password.value = ''
     })
@@ -37,6 +33,10 @@ const login = () => {
     <div class="login">
         <h2 class="title">表白墙</h2>
         <div class="input">
+            <p>昵称</p>
+            <el-input v-model="name" prefix-icon="User" placeholder="请输入昵称" style="width: 500px;"></el-input>
+        </div>
+        <div class="input">
             <p>账号</p>
             <el-input v-model="username" prefix-icon="User" placeholder="请输入用户名" style="width: 500px;"></el-input>
         </div>
@@ -46,10 +46,7 @@ const login = () => {
                 auto-complete="new-password" show-password></el-input>
         </div>
         <div class="input">
-            <el-button @click="login" style="width: 500px;" type="primary" :disabled="isEmpty">登录</el-button>
-        </div>
-        <div class="input">
-            <el-button @click="router.push({ name: 'reg' })" style="width: 500px;" type="info">没有账号？前往注册</el-button>
+            <el-button @click="reg" style="width: 500px;" type="primary" :disabled="isEmpty">注册</el-button>
         </div>
     </div>
 </div>

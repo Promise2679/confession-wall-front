@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, type Ref } from 'vue';
-import { ElNotification, type UploadUserFile, type UploadProps, type UploadFile } from 'element-plus';
+import { ElNotification, type UploadProps } from 'element-plus';
 import { formatChecker } from '@/utils/picUploader';
 import userStore from '@/stores/user';
 import { RouterLink } from 'vue-router';
 import { Check } from '@element-plus/icons-vue';
-import axios from '@/request/request'
+import axios from '@/utils/request'
 import oklchToHex from '@/utils/oklch2hex';
 
 const store = userStore()
@@ -13,35 +13,15 @@ const store = userStore()
 const username = ref(store.username)
 const primaryPassword = ref('')
 const newPassword = ref('')
-const dialogImageUrl = ref('')
-const dialogVisible = ref(false)
-
-// 头像列表
-const fileList: Ref<UploadUserFile[]> = ref([
-    {
-        name: 'avatar',
-        url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-    }
-])
 
 const usernameChecker = computed(() => username.value === '' || username.value === store.username)
 const passwordChecker = computed(() => primaryPassword.value === '' || newPassword.value === '' || primaryPassword.value === newPassword.value)
 
 const submitUsername = () => {
-    const data = {
-        name: username.value
-    }
-    axios.put('/api/user/name', data).then(() => {
+    axios.put('/api/user/name', { name: username.value }).then(() => {
         store.username = username.value
         ElNotification({ message: '修改成功！', type: 'success', duration: 1500 })
     })
-}
-
-// 上传头像成功后，移除前一个头像
-const submitAvatar: UploadProps['onSuccess'] = res => {
-    if (res.code === 200) {
-        fileList.value.shift()
-    }
 }
 
 const submitPassword = () => {
@@ -56,9 +36,8 @@ const submitPassword = () => {
         })
 }
 
-const picturePreview = (file: UploadFile) => {
-    dialogImageUrl.value = file.url!
-    dialogVisible.value = true
+const updateAvatar: UploadProps['onSuccess'] = (res) => {
+    store.avatar = res.data
 }
 </script>
 
@@ -75,26 +54,10 @@ const picturePreview = (file: UploadFile) => {
         </div>
 
         <p>头像：</p>
-        <el-upload action="/api/avatar" v-model:file-list="fileList" method="put" :before-upload="formatChecker"
-            :on-success="submitAvatar" list-type="picture-card">
-            <el-icon>
-                <Plus />
-            </el-icon>
-            <!-- 放大图片按钮 -->
-            <template #file="{ file }">
-                <div>
-                    <img class="el-upload-list__item-thumbnail" :src="file.url" />
-                    <span class="el-upload-list__item-actions">
-                        <span class="el-upload-list__item-preview" @click="picturePreview(file)">
-                            <el-icon><zoom-in /></el-icon>
-                        </span>
-                    </span>
-                </div>
-            </template>
+        <el-upload action="/api/avatar" method="put" :show-file-list="false" :before-upload="formatChecker"
+            list-type="picture-card" :on-success="updateAvatar">
+            <el-image style="width: 100px; height: 100px" :src="store.avatar" />
         </el-upload>
-        <el-dialog v-model="dialogVisible">
-            <img :src="dialogImageUrl" />
-        </el-dialog>
 
         <p>我发布的帖子：</p>
         <RouterLink to="/mypost" class="btn-1"><el-button>查看</el-button></RouterLink>

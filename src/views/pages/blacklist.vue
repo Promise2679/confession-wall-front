@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Card from '@/views/components/blacklist-card.vue'
+import Card from '@/views/components/Blacklist-card.vue'
 import { onMounted, ref, type Ref } from 'vue';
-import axios from '@/request/request'
+import axios from '@/utils/request'
 import { type Blocklist } from '@/models/models';
 
 const blacklist: Ref<Blocklist[]> = ref([])

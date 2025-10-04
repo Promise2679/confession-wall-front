@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ElMessageBox, ElNotification } from 'element-plus';
-import axios from '@/request/request'
+import axios from '@/utils/request'
+import type { Mypost } from '@/models/models';
 
 interface Props {
-    postid: number
-    content: string
+    data: Mypost
 }
 
 // change 事件，当删除或修改帖子时触发
@@ -21,33 +21,24 @@ const deletePost = () => {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
         type: 'warning',
-    }).then(() => {
-        const data = {
-            params: {
-                post_id: prop.postid
-            }
-        }
-        axios.delete('/api/post', data).then(() => {
-            ElNotification({ message: '删除成功！', type: 'success', duration: 1500 })
-            emit('change')
-        })
-    })
+    }).then(() => axios.delete('/api/post', { params: { post_id: prop.data.postid } }).then(() => {
+        ElNotification({ message: '删除成功！', type: 'success', duration: 1500 })
+        emit('change')
+    }))
 }
 
 const editPost = () => {
     ElMessageBox.prompt('请编辑要修改的部分：', {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
-        inputValue: prop.content,
+        inputValue: prop.data.content,
         inputType: 'textarea',
         inputPattern: /^(?!\s*$).+/,
         inputErrorMessage: '内容不能为空！',
     }).then(({ value }) => {
-        if (prop.content === value) {
-            return
-        }
+        if (prop.data.content === value) return
         const data = {
-            post_id: prop.postid,
+            post_id: prop.data.postid,
             content: value,
         }
         axios.put('/api/post', data).then(() => {
@@ -61,7 +52,7 @@ const editPost = () => {
 <template>
 <div class="comment">
     <div class="content">
-        {{ content }}
+        {{ data.content }}
         <!-- 这条注释的上面是正文，下面是图片 -->
         <div class="pic-container">
             <el-image src="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
@@ -82,5 +73,5 @@ const editPost = () => {
 </template>
 
 <style scoped>
-@import "@/asset/comment.css";
+@import "@/assets/comment.css";
 </style>

@@ -26,17 +26,18 @@ const logout = () => {
 }
 
 // 实时监听，更新主题色和全局字体
-watchDebounced(fontSize, value => updateFontsize(value), { debounce: 500, maxWait: 500 })
-watchDebounced(color, value => updateColor(value), { debounce: 500, maxWait: 50 })
+watchDebounced(fontSize, value => updateFontsize(value), { debounce: 500, maxWait: 50, immediate: true })
+watchDebounced(color, value => updateColor(value), { debounce: 500, maxWait: 50, immediate: true })
 </script>
 
 <template><el-affix>
     <div class="aside">
         <div class="head">
             <img class="avatar" :src="store.avatar">
-            <span class="name">{{ store.username.length ? store.username : '未登录' }}</span>
+            <span class="name">{{ store.username ? store.username : '未登录' }}</span>
         </div>
         <RouterLink to="/" class="btn">首页</RouterLink>
+        <RouterLink to="/rank" class="btn">排行榜</RouterLink>
         <RouterLink to="/profile" class="btn">个人中心</RouterLink>
         <div style="flex: 1"></div>
         <div class="option">

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import type { Ref } from 'vue';
-import Comment from '@/views/components/comment.vue';
+import Comment from '@/views/components/Comment.vue';
 import { ElNotification, type UploadProps } from 'element-plus';
 import { formatChecker } from '@/utils/picUploader';
 import { Picture } from '@element-plus/icons-vue';
-import axios from '@/request/request'
+import axios from '@/utils/request'
 import oklchToHex from '@/utils/oklch2hex';
 import userStore from '@/stores/user';
 import { type Post } from '@/models/models';
@@ -23,6 +23,9 @@ const isSend = ref(false)
 const isAnonymous = ref(false)
 const isInvisible = ref(false)
 
+const release_time = ref('')
+const isClock = ref(false)
+
 // 从 placeholderList 中随机选择一个元素，当做 placeholder 中的内容
 const placeholderContent = ref(placeholderList[Math.floor(Math.random() * placeholderList.length)])
 
@@ -35,15 +38,23 @@ const sendPost = () => {
         picture: pictureList.value,
         anonymous: isAnonymous.value,
         invisible: isInvisible.value,
+        release_time: release_time.value,
+        release_status: !isClock.value,
     }
     axios.post('/api/post', data).then(() => {
         getPosts()
         ElNotification({ message: '发布成功！', type: 'success', duration: 1500 })
     }).finally(() => {
         inputContent.value = ''
+        isClock.value = false
+        isAnonymous.value = false
+        isInvisible.value = false
+        release_time.value = ''
         isSend.value = false
     })
 }
+
+const isDisabled = computed(() => inputContent.value === '' || isClock.value && release_time.value === '')
 
 // 上传图片后，将返回的 url 存入 pictureList，方便后续上传给后端
 const addUrl: UploadProps['onSuccess'] = res => pictureList.value.push(res.data)
@@ -57,11 +68,11 @@ watch(isAnonymous, value => placeholderContent.value = value ? '勇敢一点，�
 <template>
 <div class="container">
     <div class="comments">
-        <Comment v-for="item in postList" :key="item.id" :data="item" @change="getPosts" />
+        <Comment v-for="item in postList" :key="item.post_id" :data="item" @change="getPosts" />
     </div>
     <!-- 这条注释的上面是正文，下面是输入框 -->
     <div class="input" v-loading="isSend">
-        <el-input v-model="inputContent" style="width: 100%" rows="5" type="textarea"
+        <el-input v-model="inputContent" style="width: 100%" :rows="5" type="textarea"
             :placeholder="placeholderContent"></el-input>
         <div class="btn-container">
             <!-- 上传图片部分 -->
@@ -72,13 +83,15 @@ watch(isAnonymous, value => placeholderContent.value = value ? '勇敢一点，�
                 </el-icon>
             </el-upload>
         </div>
-        <!-- 匿名和仅自己可见的按钮 -->
-        <div>
+        <!-- 按钮 -->
+        <div class="checkbox-container">
+            <el-checkbox v-model="isClock" label="定时发布"></el-checkbox>
             <el-checkbox v-model="isAnonymous" label="匿名" />
             <el-checkbox v-model="isInvisible" label="仅自己可见" />
         </div>
+        <el-date-picker v-if="isClock" v-model="release_time" type="datetime" placeholder="请选择时间"></el-date-picker>
         <!-- 炫酷的适配了自定义配色功能的按钮 -->
-        <el-button @click="sendPost" style="width: 100%; color: white" :disabled="inputContent.length === 0"
+        <el-button @click="sendPost" style="width: 100%; color: white" :disabled="isDisabled"
             :color="oklchToHex(0.85, 0.08, store.color)">发布</el-button>
     </div>
 </div>
@@ -96,11 +109,21 @@ watch(isAnonymous, value => placeholderContent.value = value ? '勇敢一点，�
 
 .comments {
     margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .btn-container {
     display: flex;
     flex-direction: row;
+}
+
+.checkbox-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
 }
 
 .icon {

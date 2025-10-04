@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import Comment from '@/views/components/mypost.vue';
-import axios from '@/request/request'
+import Comment from '@/views/components/Mypost.vue';
+import axios from '@/utils/request'
 import { onMounted, ref, type Ref } from 'vue';
-
-interface Mypost {
-    post_id: number
-    content: string
-}
+import type { Mypost } from '@/models/models';
 
 const mypostList: Ref<Mypost[]> = ref([])
 
@@ -19,8 +15,7 @@ onMounted(() => getMyposts())
 <RouterLink to="/profile"><el-button class="btn">返回</el-button></RouterLink>
 <div style="width: calc(100% - 300px); background-color: var(--bg-color);">
     <div class="comments">
-        <Comment v-for="item in mypostList" :key="item.post_id" :postid="item.post_id" :content="item.content"
-            @change="getMyposts" />
+        <Comment v-for="item in mypostList" :key="item.postid" :data="item" @change="getMyposts" />
     </div>
 </div>
 </template>
