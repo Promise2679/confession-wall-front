@@ -11,7 +11,7 @@ const userStore = defineStore('user', () => {
   const color = useStorage('color', 0)
   const avatar = useStorage('avatar', './src/assets/default_avatar.webp')
   const fontSize = useStorage('font-size', 1)
-  const isLogin = ref(false)
+  const isLogin = useStorage('login', false)
 
   // 重置函数，注销时使用
   const $reset = () => {

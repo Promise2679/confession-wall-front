@@ -47,9 +47,7 @@ const sendReply = () => {
         replyid.value = 0
     })
 }
-
-// 待讨论，暂时传帖子 id
-const addBlacklist = () => axios.post('/api/block', { block_id: prop.data.post_id })
+const addBlacklist = () => axios.post('/api/block', { block_id: prop.data.user_id })
     .then(() => emit('change'))
 
 const toggleLike = () => axios.post('/api/like', { post_id: prop.data.post_id })
@@ -90,6 +88,9 @@ whenever(showComment, () => {
         </div>
         <!-- 按钮部分，可以进行相关操作 -->
         <div class="methods">
+            <div class="method no-pointer" v-if="data.release_time !== data.update_time">
+                {{ `修改于 ${new Date(data.update_time).toLocaleString()}` }}
+            </div>
             <div class="method no-pointer">
                 {{ new Date(data.release_time).toLocaleString() }}
             </div>

@@ -13,7 +13,10 @@ import { type Post } from '@/models/models';
 
 const store = userStore()
 
+const color = ref(store.color)
+
 const placeholderList = ['你一生，我一世，依久依旧不分离', '写下你的心动，让世界见证你的喜欢', '有些话，只想让TA知道，也让风知道', '山野万里，你是我藏在微风中的欢喜', '此处安心是吾乡，此处留言诉衷肠', '开始你的“甜蜜输出”～']
+const total = ref(100)
 const postList: Ref<Post[]> = ref([])
 const inputContent = ref('')
 const pictureList: Ref<string[]> = ref([])
@@ -29,7 +32,18 @@ const isClock = ref(false)
 // 从 placeholderList 中随机选择一个元素，当做 placeholder 中的内容
 const placeholderContent = ref(placeholderList[Math.floor(Math.random() * placeholderList.length)])
 
-const getPosts = () => axios.get("/api/post").then(res => postList.value = res.data.data)
+const getPosts = () => {
+    const data = {
+        params: {
+            page: 1,
+            page_size: 10,
+        }
+    }
+    axios.get("/api/post", data).then(res => {
+        postList.value = res.data.data.post_list
+        total.value = res.data.data.total
+    })
+}
 
 const sendPost = () => {
     isSend.value = true
@@ -70,6 +84,7 @@ watch(isAnonymous, value => placeholderContent.value = value ? '勇敢一点，�
     <div class="comments">
         <Comment v-for="item in postList" :key="item.post_id" :data="item" @change="getPosts" />
     </div>
+    <el-pagination layout="prev,pager,next" :total="total"></el-pagination>
     <!-- 这条注释的上面是正文，下面是输入框 -->
     <div class="input" v-loading="isSend">
         <el-input v-model="inputContent" style="width: 100%" :rows="5" type="textarea"
@@ -94,6 +109,7 @@ watch(isAnonymous, value => placeholderContent.value = value ? '勇敢一点，�
         <el-button @click="sendPost" style="width: 100%; color: white" :disabled="isDisabled"
             :color="oklchToHex(0.85, 0.08, store.color)">发布</el-button>
     </div>
+    
 </div>
 </template>
 

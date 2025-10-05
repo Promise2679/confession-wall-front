@@ -34,7 +34,7 @@ watchDebounced(color, value => updateColor(value), { debounce: 500, maxWait: 50,
     <div class="aside">
         <div class="head">
             <img class="avatar" :src="store.avatar">
-            <span class="name">{{ store.username ? store.username : '未登录' }}</span>
+            <span class="name">{{ store.username || '未登录' }}</span>
         </div>
         <RouterLink to="/" class="btn">首页</RouterLink>
         <RouterLink to="/rank" class="btn">排行榜</RouterLink>

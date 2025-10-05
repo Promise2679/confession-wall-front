@@ -14,6 +14,7 @@ const isEmpty = computed(() => name.value === '' || username.value === '' || pas
 
 const reg = () => {
     const data = {
+        name: name.value,
         username: username.value,
         password: password.value,
     }
@@ -38,7 +39,7 @@ const reg = () => {
         </div>
         <div class="input">
             <p>账号</p>
-            <el-input v-model="username" prefix-icon="User" placeholder="请输入用户名" style="width: 500px;"></el-input>
+            <el-input v-model="username" prefix-icon="User" placeholder="请输入账号" style="width: 500px;"></el-input>
         </div>
         <div class="input">
             <p>密码</p>

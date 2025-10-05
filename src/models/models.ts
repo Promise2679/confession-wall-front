@@ -17,6 +17,7 @@ export interface Post {
     update_time: string
     content: string
     comments: number
+    user_id: number
 }
 
 // 个人发布的帖子
