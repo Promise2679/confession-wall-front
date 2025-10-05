@@ -8,22 +8,22 @@ export interface Blocklist {
 // 帖子
 export interface Post {
     post_id: number
-    name: string
-    likes: number
-    views: number
-    avatar: string
-    release_time: string
-    picture: string[]
-    update_time: string
-    content: string
-    comments: number
     user_id: number
+    comments: number
+    views: number
+    content: string
+    avatar: string
+    likes: number
+    name: string
+    picture: string[]
+    updated_at: string
 }
 
 // 个人发布的帖子
 export interface Mypost {
-    postid: number
+    post_id: number
     content: string
+    urls: string[]
 }
 
 // 评论

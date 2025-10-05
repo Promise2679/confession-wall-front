@@ -15,7 +15,7 @@ onMounted(() => getMyposts())
 <RouterLink to="/profile"><el-button class="btn">返回</el-button></RouterLink>
 <div style="width: calc(100% - 300px); background-color: var(--bg-color);">
     <div class="comments">
-        <Comment v-for="item in mypostList" :key="item.postid" :data="item" @change="getMyposts" />
+        <Comment v-for="item in mypostList" :key="item.post_id" :data="item" @change="getMyposts" />
     </div>
 </div>
 </template>

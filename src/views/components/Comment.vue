@@ -34,7 +34,7 @@ const sendReply = () => {
     isSend.value = true
     const data = {
         post_id: prop.data.post_id,
-        reply_id: replyid.value,
+        reply_to: replyid.value,
         content: inputContent.value,
     }
     axios.post('/api/reply', data).then(() => {
@@ -88,14 +88,11 @@ whenever(showComment, () => {
         </div>
         <!-- 按钮部分，可以进行相关操作 -->
         <div class="methods">
-            <div class="method no-pointer" v-if="data.release_time !== data.update_time">
-                {{ `修改于 ${new Date(data.update_time).toLocaleString()}` }}
+            <div class="method no-pointer">
+                {{ data.updated_at }}
             </div>
             <div class="method no-pointer">
-                {{ new Date(data.release_time).toLocaleString() }}
-            </div>
-            <div class="method no-pointer">
-                <font-awesome-icon icon="fa-solid fa-eye" />
+                <font-awesome-icon icon="fa-solid fa-eye" />{{ data.views }}
             </div>
             <div class="method" @click="addBlacklist">拉黑</div>
             <div @click="toggleLike" class="method">
@@ -112,7 +109,7 @@ whenever(showComment, () => {
         <div v-if="showComment" class="replies">
             <Reply v-for="item in replyList" :key="item.id" :data="item" @response="changeResponse" />
             <!-- 这条注释上面是评论，下面是评论框 -->
-            <div class="input" v-loading="isSend">
+            <div style="width: 900px;" v-loading="isSend">
                 <el-input v-model="inputContent" style="width: 100%" rows="5" type="textarea"
                     :placeholder="`回复 ${response}：`"></el-input>
                 <el-button @click="sendReply" style="width: 100%; color: white;" :disabled="inputContent.length === 0"

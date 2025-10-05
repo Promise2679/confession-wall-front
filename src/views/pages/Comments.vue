@@ -13,8 +13,6 @@ import { type Post } from '@/models/models';
 
 const store = userStore()
 
-const color = ref(store.color)
-
 const placeholderList = ['你一生，我一世，依久依旧不分离', '写下你的心动，让世界见证你的喜欢', '有些话，只想让TA知道，也让风知道', '山野万里，你是我藏在微风中的欢喜', '此处安心是吾乡，此处留言诉衷肠', '开始你的“甜蜜输出”～']
 const total = ref(100)
 const postList: Ref<Post[]> = ref([])
@@ -36,7 +34,7 @@ const getPosts = () => {
     const data = {
         params: {
             page: 1,
-            page_size: 10,
+            page_size: 10
         }
     }
     axios.get("/api/post", data).then(res => {
@@ -52,7 +50,7 @@ const sendPost = () => {
         picture: pictureList.value,
         anonymous: isAnonymous.value,
         invisible: isInvisible.value,
-        release_time: release_time.value,
+        release_time: release_time.value || new Date(),
         release_status: !isClock.value,
     }
     axios.post('/api/post', data).then(() => {
@@ -92,7 +90,7 @@ watch(isAnonymous, value => placeholderContent.value = value ? '勇敢一点，�
         <div class="btn-container">
             <!-- 上传图片部分 -->
             <el-upload action="/api/picture" :before-upload="formatChecker" :on-success="addUrl" class="icon"
-                list-type="picture" :limit="9">
+                list-type="picture" :limit="9" :multiple="true">
                 <el-icon>
                     <Picture />
                 </el-icon>
@@ -108,8 +106,7 @@ watch(isAnonymous, value => placeholderContent.value = value ? '勇敢一点，�
         <!-- 炫酷的适配了自定义配色功能的按钮 -->
         <el-button @click="sendPost" style="width: 100%; color: white" :disabled="isDisabled"
             :color="oklchToHex(0.85, 0.08, store.color)">发布</el-button>
-    </div>
-    
+    </div>   
 </div>
 </template>
 
@@ -126,6 +123,7 @@ watch(isAnonymous, value => placeholderContent.value = value ? '勇敢一点，�
 .comments {
     margin-top: 40px;
     display: flex;
+    width: 90%;
     flex-direction: column;
     gap: 20px;
 }
@@ -154,6 +152,6 @@ watch(isAnonymous, value => placeholderContent.value = value ? '勇敢一点，�
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 1220px;
+    width: 90%;
 }
 </style>

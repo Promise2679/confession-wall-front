@@ -21,7 +21,7 @@ const deletePost = () => {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
         type: 'warning',
-    }).then(() => axios.delete('/api/post', { params: { post_id: prop.data.postid } }).then(() => {
+    }).then(() => axios.delete('/api/post', { params: { post_id: prop.data.post_id } }).then(() => {
         ElNotification({ message: '删除成功！', type: 'success', duration: 1500 })
         emit('change')
     }))
@@ -38,7 +38,7 @@ const editPost = () => {
     }).then(({ value }) => {
         if (prop.data.content === value) return
         const data = {
-            post_id: prop.data.postid,
+            post_id: prop.data.post_id,
             content: value,
         }
         axios.put('/api/post', data).then(() => {
