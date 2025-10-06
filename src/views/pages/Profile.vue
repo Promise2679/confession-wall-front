@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, type Ref } from 'vue';
-import { ElNotification, type UploadProps } from 'element-plus';
+import { ElNotification, Options, type UploadProps, type UploadRequestOptions } from 'element-plus';
 import { formatChecker } from '@/utils/picUploader';
 import userStore from '@/stores/user';
 import { RouterLink } from 'vue-router';
@@ -36,8 +36,16 @@ const submitPassword = () => {
         })
 }
 
-const updateAvatar: UploadProps['onSuccess'] = (res) => {
-    store.avatar = res.data
+const uploadAvatar = (options: UploadRequestOptions) => {
+    const formData = new FormData()
+    formData.append('file', options.file)
+    axios.put('/api/avatar', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    }).then(res => {
+        store.avatar = res.data.data
+    })
 }
 </script>
 
@@ -55,7 +63,7 @@ const updateAvatar: UploadProps['onSuccess'] = (res) => {
 
         <p>头像：</p>
         <el-upload action="/api/avatar" method="put" :show-file-list="false" :before-upload="formatChecker"
-            list-type="picture-card" :on-success="updateAvatar">
+            list-type="picture-card" :http-request="uploadAvatar">
             <el-image style="width: 100px; height: 100px" :src="store.avatar" />
         </el-upload>
 

@@ -23,6 +23,7 @@ const login = () => {
         store.isLogin = true
         store.userid = res.data.data.user_id
         store.token = res.data.data.token
+        store.avatar = res.data.data.avatar
         ElNotification({ message: '欢迎回来！', type: 'success', duration: 1500 })
         router.push({ name: 'home' })
     }).finally(() => {

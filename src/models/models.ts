@@ -16,7 +16,8 @@ export interface Post {
     likes: number
     name: string
     picture: string[]
-    updated_at: string
+    updated_time: string
+    release_time: string
 }
 
 // 个人发布的帖子

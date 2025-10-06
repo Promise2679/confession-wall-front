@@ -6,7 +6,9 @@ import RankCard from '../components/Rank-card.vue';
 
 const postList: Ref<Rank[]> = ref([])
 
-const getPosts = () => axios.get("/api/hotRank").then(res => postList.value = res.data.data.hot_rank)
+const getPosts = () => axios.get("/api/hotRank").then(res => {
+    postList.value = res.data.data
+})
 
 onMounted(() => getPosts())
 </script>
@@ -30,6 +32,7 @@ onMounted(() => getPosts())
 }
 
 .comments {
+    width: 80%;
     margin-top: 40px;
     display: flex;
     flex-direction: column;

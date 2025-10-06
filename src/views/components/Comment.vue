@@ -37,8 +37,9 @@ const sendReply = () => {
         reply_to: replyid.value,
         content: inputContent.value,
     }
-    axios.post('/api/reply', data).then(() => {
+    axios.post('/api/reply', data).then(res => {
         ElNotification({ message: '发布成功！', type: 'success', duration: 1500 })
+        prop.data.comments = res.data.data.total
         getReply()
     }).finally(() => {
         isSend.value = false
@@ -47,14 +48,26 @@ const sendReply = () => {
         replyid.value = 0
     })
 }
-const addBlacklist = () => axios.post('/api/block', { block_id: prop.data.user_id })
-    .then(() => emit('change'))
+const addBlacklist = () => {
+    const data = {
+        block_id: prop.data.user_id
+    }
+    console.log(data)
+    axios.post('/api/block', { block_id: prop.data.user_id })
+        .then(() => {
+            ElNotification({ message: '拉黑成功！', type: 'success', duration: 1500 })
+            emit('change')
+        })
+}
 
 const toggleLike = () => axios.post('/api/like', { post_id: prop.data.post_id })
     .then(res => prop.data.likes = res.data.data)
 
 const getReply = () => axios.get('/api/reply', { params: { post_id: prop.data.post_id } })
-    .then(res => replyList.value = res.data.data)
+    .then(res => {
+        console.log(res)
+        replyList.value = res.data.data
+    })
 
 const changeResponse = (name: string, id: number) => {
     response.value = name
@@ -82,14 +95,14 @@ whenever(showComment, () => {
         <div class="content">
             {{ data.content }}
             <div class="pic-container">
-                <el-image v-for="(index, item) in data.picture" :src="item" style="width: 100px; height: 100px;"
+                <el-image v-for="(item, index) in data.picture" :src="item" style="width: 100px; height: 100px;"
                     :preview-src-list="data.picture" :initial-index="index" />
             </div>
         </div>
         <!-- 按钮部分，可以进行相关操作 -->
         <div class="methods">
             <div class="method no-pointer">
-                {{ data.updated_at }}
+                {{ new Date(data.updated_time).toLocaleString() }}
             </div>
             <div class="method no-pointer">
                 <font-awesome-icon icon="fa-solid fa-eye" />{{ data.views }}
@@ -109,8 +122,8 @@ whenever(showComment, () => {
         <div v-if="showComment" class="replies">
             <Reply v-for="item in replyList" :key="item.id" :data="item" @response="changeResponse" />
             <!-- 这条注释上面是评论，下面是评论框 -->
-            <div style="width: 900px;" v-loading="isSend">
-                <el-input v-model="inputContent" style="width: 100%" rows="5" type="textarea"
+            <div style="width: 100%;" v-loading="isSend">
+                <el-input v-model="inputContent" style="width: 100%" :rows="5" type="textarea"
                     :placeholder="`回复 ${response}：`"></el-input>
                 <el-button @click="sendReply" style="width: 100%; color: white;" :disabled="inputContent.length === 0"
                     :color="oklchToHex(0.85, 0.08, store.color)">发布</el-button>
@@ -160,6 +173,7 @@ whenever(showComment, () => {
 }
 
 .replies {
+    width: 80%;
     border: 1px solid #e9ecef;
 }
 

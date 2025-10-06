@@ -9,7 +9,7 @@ const userStore = defineStore('user', () => {
   const username = useStorage('username', '')
   const token = useStorage('token', '')
   const color = useStorage('color', 0)
-  const avatar = useStorage('avatar', './src/assets/default_avatar.webp')
+  const avatar = useStorage('avatar', './default_avatar.webp')
   const fontSize = useStorage('font-size', 1)
   const isLogin = useStorage('login', false)
 

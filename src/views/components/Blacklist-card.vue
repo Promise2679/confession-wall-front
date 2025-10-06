@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { type Blocklist } from '@/models/models';
 import axios from '@/utils/request';
+import { ElNotification } from 'element-plus';
 
 interface Props {
     data: Blocklist
@@ -16,7 +17,10 @@ const prop = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
 const removeBlacklist = () => axios.post('/api/block', { block_id: prop.data.block_id })
-    .then(() => emit('change'))
+    .then(() => {
+        ElNotification({ message: '取消拉黑成功！', type: 'success', duration: 1500 })
+        emit('change')
+    })
 </script>
 
 <template>

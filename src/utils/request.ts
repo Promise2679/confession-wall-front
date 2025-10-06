@@ -19,9 +19,10 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   (res) => {
     if (res.data.code === 200) {
+      console.log(res)
       return res
     }
-    console.log(res.data)
+    
     ElNotification({ message: res.data.msg, type: 'error', duration: 1500 })
     return Promise.reject(res.data.msg)
   },

@@ -2,15 +2,17 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import Comment from '@/views/components/Comment.vue';
-import { ElNotification, type UploadProps } from 'element-plus';
+import { ElNotification, type UploadProps, type UploadRequestOptions } from 'element-plus';
 import { formatChecker } from '@/utils/picUploader';
 import { Picture } from '@element-plus/icons-vue';
 import axios from '@/utils/request'
 import oklchToHex from '@/utils/oklch2hex';
 import userStore from '@/stores/user';
 import { type Post } from '@/models/models';
+import { useRoute, useRouter } from 'vue-router';
 
-
+const router = useRouter()
+const route = useRoute()
 const store = userStore()
 
 const placeholderList = ['你一生，我一世，依久依旧不分离', '写下你的心动，让世界见证你的喜欢', '有些话，只想让TA知道，也让风知道', '山野万里，你是我藏在微风中的欢喜', '此处安心是吾乡，此处留言诉衷肠', '开始你的“甜蜜输出”～']
@@ -19,8 +21,9 @@ const postList: Ref<Post[]> = ref([])
 const inputContent = ref('')
 const pictureList: Ref<string[]> = ref([])
 
-const isSend = ref(false)
+const currPage = ref(Number(route.query.p) || 1)
 
+const isSend = ref(false)
 const isAnonymous = ref(false)
 const isInvisible = ref(false)
 
@@ -33,13 +36,23 @@ const placeholderContent = ref(placeholderList[Math.floor(Math.random() * placeh
 const getPosts = () => {
     const data = {
         params: {
-            page: 1,
-            page_size: 10
+            page: currPage.value,
+            page_size: 10,
         }
     }
     axios.get("/api/post", data).then(res => {
         postList.value = res.data.data.post_list
         total.value = res.data.data.total
+    })
+}
+
+// 借助 Router 达成自动置顶的效果
+const changePage = () => {
+    getPosts()
+    router.push({
+        query: {
+            p: currPage.value,
+        }
     })
 }
 
@@ -68,10 +81,27 @@ const sendPost = () => {
 
 const isDisabled = computed(() => inputContent.value === '' || isClock.value && release_time.value === '')
 
-// 上传图片后，将返回的 url 存入 pictureList，方便后续上传给后端
-const addUrl: UploadProps['onSuccess'] = res => pictureList.value.push(res.data)
+const uploadPicture = (options: UploadRequestOptions) => {
+    const formData = new FormData()
+    formData.append('file', options.file)
+    axios.post('/api/picture', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    }).then(res => {
+        options.onSuccess(res.data.data)
+    })
+}
 
-onMounted(() => getPosts())
+// 上传图片后，将返回的 url 存入 pictureList，方便后续上传给后端
+const addUrl: UploadProps['onSuccess'] = res => {
+    pictureList.value.push(res)
+    console.log(pictureList.value)
+}
+
+onMounted(() => {
+    getPosts()
+})
 
 // 点击匿名按钮时，更换 placeholder 内容
 watch(isAnonymous, value => placeholderContent.value = value ? '勇敢一点，不留名也可以' : placeholderList[Math.floor(Math.random() * placeholderList.length)])
@@ -82,15 +112,16 @@ watch(isAnonymous, value => placeholderContent.value = value ? '勇敢一点，�
     <div class="comments">
         <Comment v-for="item in postList" :key="item.post_id" :data="item" @change="getPosts" />
     </div>
-    <el-pagination layout="prev,pager,next" :total="total"></el-pagination>
+    <el-pagination v-model:current-page="currPage" @update:current-page="changePage" layout="prev,pager,next"
+        :total="total"></el-pagination>
     <!-- 这条注释的上面是正文，下面是输入框 -->
     <div class="input" v-loading="isSend">
         <el-input v-model="inputContent" style="width: 100%" :rows="5" type="textarea"
             :placeholder="placeholderContent"></el-input>
         <div class="btn-container">
             <!-- 上传图片部分 -->
-            <el-upload action="/api/picture" :before-upload="formatChecker" :on-success="addUrl" class="icon"
-                list-type="picture" :limit="9" :multiple="true">
+            <el-upload action="/api/picture" v-model:file-list="pictureList" :before-upload="formatChecker" class="icon" :http-request="uploadPicture" :on-success="addUrl"
+                list-type="picture" :limit="9">
                 <el-icon>
                     <Picture />
                 </el-icon>
@@ -106,7 +137,7 @@ watch(isAnonymous, value => placeholderContent.value = value ? '勇敢一点，�
         <!-- 炫酷的适配了自定义配色功能的按钮 -->
         <el-button @click="sendPost" style="width: 100%; color: white" :disabled="isDisabled"
             :color="oklchToHex(0.85, 0.08, store.color)">发布</el-button>
-    </div>   
+    </div>
 </div>
 </template>
 

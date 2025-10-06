@@ -55,9 +55,8 @@ const editPost = () => {
         {{ data.content }}
         <!-- 这条注释的上面是正文，下面是图片 -->
         <div class="pic-container">
-            <el-image src="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
-                style="width: 100px; height: 100px;"
-                :preview-src-list="['https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg']" />
+                <el-image v-for="(item, index) in data.urls" :src="item" style="width: 100px; height: 100px;"
+                    :preview-src-list="data.urls" :initial-index="index" />
         </div>
     </div>
     <!-- 按钮 -->

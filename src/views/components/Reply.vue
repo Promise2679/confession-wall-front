@@ -35,7 +35,7 @@ defineEmits<Emits>()
     position: relative;
     display: flex;
     flex-direction: row;
-    width: 900px;
+    width: calc(100% - 20px);
     height: 100px;
     padding-bottom: 40px;
     padding-right: 20px;
